@@ -1,0 +1,272 @@
+[
+  {
+    "name": "Adjustable Dumbbells",
+    "price": 150.0,
+    "description": "Pair of adjustable dumbbells with a range of 5-50 lbs.",
+    "image": "https://example.com/images/adjustable-dumbbells.jpg",
+    "category": "Strength Training",
+    "quantity": 20,
+    "inStock": true
+  },
+  {
+    "name": "Yoga Mat",
+    "price": 25.0,
+    "description": "Eco-friendly, non-slip yoga mat.",
+    "image": "https://example.com/images/yoga-mat.jpg",
+    "category": "Yoga",
+    "quantity": 100,
+    "inStock": true
+  },
+  {
+    "name": "Treadmill",
+    "price": 800.0,
+    "description": "Electric treadmill with multiple workout programs.",
+    "image": "https://example.com/images/treadmill.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 10,
+    "inStock": true
+  },
+  {
+    "name": "Kettlebell Set",
+    "price": 120.0,
+    "description": "Set of 3 kettlebells: 10 lbs, 20 lbs, 30 lbs.",
+    "image": "https://example.com/images/kettlebell-set.jpg",
+    "category": "Strength Training",
+    "quantity": 15,
+    "inStock": true
+  },
+  {
+    "name": "Resistance Bands",
+    "price": 30.0,
+    "description": "Set of 5 resistance bands with varying resistance levels.",
+    "image": "https://example.com/images/resistance-bands.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 50,
+    "inStock": true
+  },
+  {
+    "name": "Exercise Bike",
+    "price": 350.0,
+    "description": "Stationary bike with adjustable resistance levels.",
+    "image": "https://example.com/images/exercise-bike.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 8,
+    "inStock": true
+  },
+  {
+    "name": "Foam Roller",
+    "price": 20.0,
+    "description": "High-density foam roller for muscle recovery.",
+    "image": "https://example.com/images/foam-roller.jpg",
+    "category": "Recovery",
+    "quantity": 75,
+    "inStock": true
+  },
+  {
+    "name": "Pull-Up Bar",
+    "price": 45.0,
+    "description": "Doorway pull-up bar for upper body strength training.",
+    "image": "https://example.com/images/pull-up-bar.jpg",
+    "category": "Strength Training",
+    "quantity": 30,
+    "inStock": true
+  },
+  {
+    "name": "Jump Rope",
+    "price": 15.0,
+    "description": "Adjustable speed jump rope.",
+    "image": "https://example.com/images/jump-rope.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 200,
+    "inStock": true
+  },
+  {
+    "name": "Medicine Ball",
+    "price": 35.0,
+    "description": "10 lb medicine ball for strength and conditioning.",
+    "image": "https://example.com/images/medicine-ball.jpg",
+    "category": "Strength Training",
+    "quantity": 40,
+    "inStock": true
+  },
+  {
+    "name": "Elliptical Machine",
+    "price": 600.0,
+    "description": "Elliptical machine with multiple resistance levels.",
+    "image": "https://example.com/images/elliptical-machine.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 5,
+    "inStock": true
+  },
+  {
+    "name": "Ab Roller",
+    "price": 25.0,
+    "description": "Ab roller wheel for core workouts.",
+    "image": "https://example.com/images/ab-roller.jpg",
+    "category": "Strength Training",
+    "quantity": 90,
+    "inStock": true
+  },
+  {
+    "name": "Battle Ropes",
+    "price": 70.0,
+    "description": "Heavy battle ropes for high-intensity training.",
+    "image": "https://example.com/images/battle-ropes.jpg",
+    "category": "Strength Training",
+    "quantity": 25,
+    "inStock": true
+  },
+  {
+    "name": "Rowing Machine",
+    "price": 450.0,
+    "description": "Water resistance rowing machine.",
+    "image": "https://example.com/images/rowing-machine.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 7,
+    "inStock": true
+  },
+  {
+    "name": "Spin Bike",
+    "price": 500.0,
+    "description": "Indoor spin bike with adjustable resistance.",
+    "image": "https://example.com/images/spin-bike.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 9,
+    "inStock": true
+  },
+  {
+    "name": "Weight Bench",
+    "price": 130.0,
+    "description": "Adjustable weight bench for various exercises.",
+    "image": "https://example.com/images/weight-bench.jpg",
+    "category": "Strength Training",
+    "quantity": 18,
+    "inStock": true
+  },
+  {
+    "name": "Exercise Ball",
+    "price": 22.0,
+    "description": "Stability exercise ball for core workouts.",
+    "image": "https://example.com/images/exercise-ball.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 60,
+    "inStock": true
+  },
+  {
+    "name": "Plyometric Box",
+    "price": 80.0,
+    "description": "Adjustable plyometric box for jump training.",
+    "image": "https://example.com/images/plyometric-box.jpg",
+    "category": "Strength Training",
+    "quantity": 20,
+    "inStock": true
+  },
+  {
+    "name": "Massage Gun",
+    "price": 120.0,
+    "description": "Percussion massage gun for muscle recovery.",
+    "image": "https://example.com/images/massage-gun.jpg",
+    "category": "Recovery",
+    "quantity": 35,
+    "inStock": true
+  },
+  {
+    "name": "Speed Ladder",
+    "price": 25.0,
+    "description": "Agility ladder for speed and footwork training.",
+    "image": "https://example.com/images/speed-ladder.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 50,
+    "inStock": true
+  },
+  {
+    "name": "Gymnastics Rings",
+    "price": 45.0,
+    "description": "Wooden gymnastics rings for strength training.",
+    "image": "https://example.com/images/gymnastics-rings.jpg",
+    "category": "Strength Training",
+    "quantity": 30,
+    "inStock": true
+  },
+  {
+    "name": "Pull-Up Assist Bands",
+    "price": 35.0,
+    "description": "Set of pull-up assist bands with varying resistance.",
+    "image": "https://example.com/images/pull-up-assist-bands.jpg",
+    "category": "Strength Training",
+    "quantity": 40,
+    "inStock": true
+  },
+  {
+    "name": "Push-Up Bars",
+    "price": 20.0,
+    "description": "Pair of push-up bars for upper body workouts.",
+    "image": "https://example.com/images/push-up-bars.jpg",
+    "category": "Strength Training",
+    "quantity": 50,
+    "inStock": true
+  },
+  {
+    "name": "Aerobic Stepper",
+    "price": 35.0,
+    "description": "Adjustable aerobic step platform for cardio workouts.",
+    "image": "https://example.com/images/aerobic-stepper.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 40,
+    "inStock": true
+  },
+  {
+    "name": "Gliding Discs",
+    "price": 15.0,
+    "description": "Pair of gliding discs for full-body workouts.",
+    "image": "https://example.com/images/gliding-discs.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 100,
+    "inStock": true
+  },
+  {
+    "name": "Trampoline",
+    "price": 180.0,
+    "description": "Fitness trampoline with handlebar for balance.",
+    "image": "https://example.com/images/trampoline.jpg",
+    "category": "Cardio Equipment",
+    "quantity": 10,
+    "inStock": true
+  },
+  {
+    "name": "Wrist Weights",
+    "price": 20.0,
+    "description": "Pair of 2 lb wrist weights for added resistance.",
+    "image": "https://example.com/images/wrist-weights.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 80,
+    "inStock": true
+  },
+  {
+    "name": "Hand Grippers",
+    "price": 12.0,
+    "description": "Set of 2 hand grippers for grip strength training.",
+    "image": "https://example.com/images/hand-grippers.jpg",
+    "category": "Fitness Accessories",
+    "quantity": 120,
+    "inStock": true
+  },
+  {
+    "name": "Weighted Vest",
+    "price": 65.0,
+    "description": "Adjustable weighted vest for added resistance.",
+    "image": "https://example.com/images/weighted-vest.jpg",
+    "category": "Strength Training",
+    "quantity": 15,
+    "inStock": true
+  },
+  {
+    "name": "Foam Yoga Blocks",
+    "price": 18.0,
+    "description": "Set of 2 foam yoga blocks for support and stability.",
+    "image": "https://example.com/images/foam-yoga-blocks.jpg",
+    "category": "Yoga",
+    "quantity": 50,
+    "inStock": true
+  }
+]

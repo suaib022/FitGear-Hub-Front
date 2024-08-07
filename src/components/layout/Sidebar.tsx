@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   return (
     <Sider
-      className="h-screen"
+      className="h-full"
       breakpoint="lg"
       collapsedWidth="0"
       onBreakpoint={() => {

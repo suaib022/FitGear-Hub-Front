@@ -1,4 +1,4 @@
-import { Button, Layout } from "antd";
+import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import HeaderComponent from "./Header";
@@ -7,7 +7,7 @@ const { Content, Footer } = Layout;
 
 const MainLayout = () => {
   return (
-    <Layout style={{ height: "100vh" }}>
+    <Layout>
       <div className="lg:hidden">
         <Sidebar />
       </div>
