@@ -3,6 +3,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import ManageProducts from "@/pages/admin/ManageProducts";
 import Product from "@/pages/product/Product";
 import AboutUs from "@/pages/about/aboutUs";
+import ProductDetails from "@/pages/product/ProductDetails";
 
 export const adminPaths = [
   { name: "Dashboard", path: "dashboard", element: <AdminDashboard /> },
@@ -21,6 +22,11 @@ export const adminPaths = [
         element: <ManageProducts />,
       },
     ],
+  },
+  {
+    name: "",
+    path: "products/:productId",
+    element: <ProductDetails />,
   },
   {
     name: "About Us",
