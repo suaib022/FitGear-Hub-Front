@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RootState } from "../../store";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -24,10 +25,16 @@ const cartSlice = createSlice({
         state.push(action.payload);
       }
     },
+    deleteOneCartItem: (state, action) => {
+      const matchedItem = state.find((item) => item._id === action.payload._id);
+      if (matchedItem) {
+        state.pop(matchedItem);
+      }
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, deleteOneCartItem } = cartSlice.actions;
 
 export default cartSlice.reducer;
 
