@@ -1,9 +1,12 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
 import { Button } from "antd";
 import { RxCrossCircled } from "react-icons/rx";
 
 import { FaCheckCircle, FaFontAwesome } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import { useAppDispatch } from "@/redux/hooks";
+import { addToCart } from "@/redux/features/cart/cartSlice";
 
 const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -20,7 +23,24 @@ const ProductDetails = () => {
     return <h2>This feature is unavailable at this moment !</h2>;
   }
 
-  const { name, price, description, category, quantity, inStock } = data.data;
+  const { _id, name, price, description, category, quantity, inStock } =
+    data.data;
+
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = () => {
+    const cartData = {
+      _id,
+      name,
+      price,
+      quantity: 1,
+      image:
+        "https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png",
+      quantityInStock: quantity,
+    };
+
+    dispatch(addToCart(cartData));
+  };
 
   return (
     <div className="flex sm:flex-row flex-col gap-6">
@@ -38,7 +58,10 @@ const ProductDetails = () => {
           Category : <span className="text-blue-500">{category}</span>
         </h2>
         <p className="">Description : {description}</p>
-        <Button className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700">
+        <Button
+          onClick={handleAddToCart}
+          className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700"
+        >
           Add To Cart
         </Button>
         <h2 className="text-yellow-600">${price}</h2>

@@ -28,7 +28,9 @@ const HeaderComponent = () => {
           </ul>
         </div>
         <div className="w-1/2 lg:w-1/3 justify-end flex ">
-          <FaOpencart className="text-blue-500  w-12" />
+          <NavLink to={"/cart"}>
+            <FaOpencart className="text-blue-500  w-12" />
+          </NavLink>
         </div>
       </div>
     </Header>
