@@ -21,6 +21,12 @@ const productApi = baseApi.injectEndpoints({
         body: productData,
       }),
     }),
+    deleteSingleProduct: builder.mutation({
+      query: (productId: string) => ({
+        url: `/products/${productId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -28,4 +34,5 @@ export const {
   useGetallProductsQuery,
   useGetSingleProductQuery,
   useCreateProductMutation,
+  useDeleteSingleProductMutation,
 } = productApi;

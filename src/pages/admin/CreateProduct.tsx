@@ -1,14 +1,11 @@
 import UseForm from "@/components/form/Form";
 import FormInput from "@/components/form/Input";
 import { useCreateProductMutation } from "@/redux/features/product/productApi";
-import { useAppDispatch } from "@/redux/hooks";
 import { Button, Row } from "antd";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 
 const CreateProduct = () => {
-  const dispatch = useAppDispatch();
-
   const defaultValues = {
     name: "Safi",
     price: 10,
