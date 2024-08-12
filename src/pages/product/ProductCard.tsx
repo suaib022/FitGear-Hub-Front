@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { addToCart } from "@/redux/features/cart/cartSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -19,7 +21,7 @@ const ProductCard = ({ product }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
 
-  const { name, price, description, image, category, quantity, inStock } =
+  const { _id, name, price, description, image, category, quantity, inStock } =
     product;
 
   const toggleDescription = () => {
@@ -39,6 +41,22 @@ const ProductCard = ({ product }) => {
     name.length > MAX_NAME_LENGTH && !showFullName
       ? `${name.substring(0, MAX_NAME_LENGTH)}...`
       : name;
+
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = () => {
+    const cartData = {
+      _id,
+      name,
+      price,
+      quantity: 1,
+      image:
+        "https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png",
+      quantityInStock: quantity,
+    };
+
+    dispatch(addToCart(cartData));
+  };
 
   return (
     <Card className="">
@@ -82,6 +100,7 @@ const ProductCard = ({ product }) => {
               <NavLink to={`/products/${product?._id}`}> Details</NavLink>
             </Button>
             <Button
+              onClick={handleAddToCart}
               className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700"
               variant="outline"
             >

@@ -13,7 +13,7 @@ export const adminPaths = [
     name: "Product Management",
     children: [
       {
-        name: "Create Product",
+        name: "Add Product",
         path: "create-product",
         element: <CreateProduct />,
       },
