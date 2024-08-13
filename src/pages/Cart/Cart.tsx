@@ -1,4 +1,5 @@
 import {
+  deleteMultipleCartItems,
   deleteOneCartItem,
   getAllCartItems,
 } from "@/redux/features/cart/cartSlice";
@@ -22,9 +23,11 @@ interface DataType {
 
 const Cart = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const dispatch = useAppDispatch();
+  const [selectedItems, setSelectedItems] = useState<DataType[]>([]);
+  const [showMultipleDeleteButton, setShowMultipleDeleteButton] =
+    useState(false);
 
-  let selectedItems;
+  const dispatch = useAppDispatch();
 
   const cartItems = useAppSelector(getAllCartItems);
 
@@ -41,11 +44,17 @@ const Cart = () => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
 
-    selectedItems = data.filter((item) =>
-      newSelectedRowKeys.includes(item.key)
-    );
-    console.log("Selected :", selectedItems);
+    const items = data.filter((item) => newSelectedRowKeys.includes(item.key));
+    setSelectedItems(items);
+
+    if (items.length > 1) {
+      setShowMultipleDeleteButton(true);
+    } else {
+      setShowMultipleDeleteButton(false);
+    }
   };
+
+  console.log({ selectedItems });
 
   // actions
   const handleDeleteOne = (key: React.Key) => {
@@ -56,6 +65,10 @@ const Cart = () => {
     console.log("selected", selectedOne);
 
     dispatch(deleteOneCartItem(selectedOne));
+  };
+
+  const handleDeleteMultiple = () => {
+    dispatch(deleteMultipleCartItems({ selectedItems }));
   };
 
   // row and column
@@ -106,7 +119,19 @@ const Cart = () => {
   ];
 
   return (
-    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+    <div>
+      {showMultipleDeleteButton ? (
+        <Button
+          onClick={handleDeleteMultiple}
+          className="bg-red-600 text-white hover:bg-rose-600"
+        >
+          Delete Selected
+        </Button>
+      ) : (
+        ""
+      )}
+      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+    </div>
   );
 };
 

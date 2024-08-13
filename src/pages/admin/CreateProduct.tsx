@@ -23,11 +23,11 @@ const CreateProduct = () => {
       toastId = toast.loading("Creating product...");
       const productData = {
         name: data.name,
-        price: data.price,
+        price: Number(data.price),
         description: data.description,
         image: data.image,
         category: data.category,
-        quantity: data.quantity,
+        quantity: Number(data.quantity),
       };
 
       const res = await createProduct(productData).unwrap();

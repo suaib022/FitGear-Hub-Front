@@ -31,10 +31,27 @@ const cartSlice = createSlice({
         state.pop(matchedItem);
       }
     },
+    deleteMultipleCartItems: (state, action) => {
+      const { selectedItems } = action.payload;
+      const x = state.length;
+
+      console.log({ selectedItems });
+      for (let i = 0; i < x; i++) {
+        console.log({ i });
+        const matchedIndex = state.findIndex(
+          (item) => item?._id === selectedItems[i]?._id
+        );
+        console.log({ matchedIndex });
+        if (matchedIndex !== -1) {
+          state.splice(matchedIndex, 1);
+        }
+      }
+    },
   },
 });
 
-export const { addToCart, deleteOneCartItem } = cartSlice.actions;
+export const { addToCart, deleteOneCartItem, deleteMultipleCartItems } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
 
