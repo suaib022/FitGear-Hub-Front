@@ -5,6 +5,7 @@ import Product from "@/pages/product/Product";
 import AboutUs from "@/pages/about/aboutUs";
 import ProductDetails from "@/pages/product/ProductDetails";
 import Cart from "@/pages/Cart/Cart";
+import UpdateProduct from "@/pages/admin/UpdateProduct";
 
 export const adminPaths = [
   { name: "Dashboard", path: "dashboard", element: <AdminDashboard /> },
@@ -28,6 +29,11 @@ export const adminPaths = [
     name: "",
     path: "products/:productId",
     element: <ProductDetails />,
+  },
+  {
+    name: "",
+    path: "update-product/:productId",
+    element: <UpdateProduct />,
   },
   {
     name: "",

@@ -1,16 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FiEdit } from "react-icons/fi";
 import React, { useState } from "react";
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import {
+  useDeleteMultipleProductsMutation,
   useDeleteSingleProductMutation,
   useGetallProductsQuery,
 } from "@/redux/features/product/productApi";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -23,22 +26,28 @@ interface DataType {
   quantity: number;
 }
 
-const Cart = () => {
+const ManageProduct = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [showMultipleDeleteButton, setShowMultipleDeleteButton] =
+    useState(false);
+  const [selectedItems, setSelectedItems] = useState<DataType[]>([]);
+  const navigate = useNavigate();
+  let clickedOne: any;
 
-  const [
-    deleteSingleProduct,
-    { isError: isDeleteError, isLoading: isDeleteLoading },
-  ] = useDeleteSingleProductMutation();
+  // console.log({ showMultipleDeleteButton });
 
-  let selectedItems;
+  const [deleteSingleProduct, { isLoading: isDeleteLoading }] =
+    useDeleteSingleProductMutation();
+
+  const [deleteMultipleProducts, { isLoading: isDeleteMultipleLoading }] =
+    useDeleteMultipleProductsMutation();
 
   const {
     data: products,
     isError,
     isLoading,
   } = useGetallProductsQuery(undefined);
-  console.log({ products });
+
   if (isLoading) {
     return (
       <Flex align="center" gap="middle">
@@ -64,21 +73,47 @@ const Cart = () => {
   }));
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
 
-    selectedItems = data.filter((item) =>
-      newSelectedRowKeys.includes(item.key)
-    );
-    console.log("Selected :", selectedItems);
+    const items = data.filter((item) => newSelectedRowKeys.includes(item.key));
+    setSelectedItems(items);
+
+    if (items.length > 1) {
+      setShowMultipleDeleteButton(true);
+    } else {
+      setShowMultipleDeleteButton(false);
+    }
   };
 
   // actions
   const handleDeleteOne = async (key: React.Key) => {
-    const selectedOne = data.find((item) => item.key === key);
+    const toastId = toast.loading("Deleting...");
+    clickedOne = data.find((item) => item.key === key);
 
-    const res = await deleteSingleProduct(selectedOne!._id);
+    const res = await deleteSingleProduct(clickedOne!._id);
+
+    if (res.data.success) {
+      toast.success("Deleted successfully !", { id: toastId, duration: 2000 });
+    }
+    if (res.error) {
+      toast.error("Something went wrong !", { id: toastId, duration: 2000 });
+    }
     console.log({ res });
+  };
+
+  const handleMultipleDelete = async () => {
+    const ids: string[] = selectedItems.map((item) => item._id);
+    const res = await deleteMultipleProducts(ids);
+
+    if (res.data.data.deletedCount) {
+      toast.success(`${res.data.message}`, { duration: 2000 });
+    }
+  };
+
+  const handleGoToUpdate = async (key: React.Key) => {
+    clickedOne = data.find((item) => item.key === key);
+
+    navigate(`/update-product/${clickedOne._id}`);
   };
 
   // row and column
@@ -127,7 +162,10 @@ const Cart = () => {
               <RiDeleteBin6Fill className="w-full h-full" />
             )}
           </Button>
-          <Button className="w-12 bg-blue-500">
+          <Button
+            className="w-12 bg-blue-500"
+            onClick={() => handleGoToUpdate(record.key)}
+          >
             <FiEdit className="w-full h-full" />
           </Button>
         </div>
@@ -137,12 +175,24 @@ const Cart = () => {
 
   return (
     <div>
-      <Button className="bg-blue-500 text-white hover:bg-rose-600">
-        <NavLink to={"/create-product"}>Add Product</NavLink>
-      </Button>
+      <div className="flex justify-between mb-4">
+        <Button className="bg-blue-500 text-white hover:bg-rose-600">
+          <NavLink to={"/create-product"}>Add Product</NavLink>
+        </Button>
+        {showMultipleDeleteButton ? (
+          <Button
+            onClick={handleMultipleDelete}
+            className="bg-red-600 text-white hover:bg-rose-600"
+          >
+            {isDeleteMultipleLoading ? "Deleting..." : "Delete Selected"}
+          </Button>
+        ) : (
+          ""
+        )}
+      </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
     </div>
   );
 };
 
-export default Cart;
+export default ManageProduct;

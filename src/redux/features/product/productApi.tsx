@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
 
 const productApi = baseApi.injectEndpoints({
@@ -23,8 +24,23 @@ const productApi = baseApi.injectEndpoints({
     }),
     deleteSingleProduct: builder.mutation({
       query: (productId: string) => ({
-        url: `/products/${productId}`,
+        url: "/products/delete",
         method: "DELETE",
+        params: { productId },
+      }),
+    }),
+    deleteMultipleProducts: builder.mutation({
+      query: (ids: string[]) => ({
+        url: "/products/delete",
+        method: "DELETE",
+        body: { ids },
+      }),
+    }),
+    updateSingleProduct: builder.mutation({
+      query: ({ productId, updatedData }) => ({
+        url: `/products/${productId}`,
+        method: "PUT",
+        body: updatedData,
       }),
     }),
   }),
@@ -35,4 +51,6 @@ export const {
   useGetSingleProductQuery,
   useCreateProductMutation,
   useDeleteSingleProductMutation,
+  useUpdateSingleProductMutation,
+  useDeleteMultipleProductsMutation,
 } = productApi;
