@@ -8,10 +8,12 @@ import { store } from "./redux/store.tsx";
 import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-      <Toaster />
-    </Provider>
-  </React.StrictMode>
+  <div className="max-w-screen-xl mx-auto">
+    <React.StrictMode>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+        <Toaster />
+      </Provider>
+    </React.StrictMode>
+  </div>
 );
