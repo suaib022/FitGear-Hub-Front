@@ -1,13 +1,13 @@
-import cardio from "../../../assets/Icons/cardio.png";
-import strength from "../../../assets/Icons/strength.png";
-import functional from "../../../assets/Icons/functional.png";
-import bodyWeight from "../../../assets/Icons/body-weight.png";
-import accessories from "../../../assets/Icons/accessories.png";
-import flooring from "../../../assets/Icons/flooring.png";
-import storage from "../../../assets/Icons/storage.png";
-import recovery from "../../../assets/Icons/recovery.png";
-import specialty from "../../../assets/Icons/specialty.png";
-import packages from "../../../assets/Icons/package.png";
+import cardio from "../../assets/Icons/cardio.png";
+import strength from "../../assets/Icons/strength.png";
+import functional from "../../assets/Icons/functional.png";
+import bodyWeight from "../../assets/Icons/body-weight.png";
+import accessories from "../../assets/Icons/accessories.png";
+import flooring from "../../assets/Icons/flooring.png";
+import storage from "../../assets/Icons/storage.png";
+import recovery from "../../assets/Icons/recovery.png";
+import specialty from "../../assets/Icons/specialty.png";
+import packages from "../../assets/Icons/package.png";
 
 const Category = () => {
   return (
