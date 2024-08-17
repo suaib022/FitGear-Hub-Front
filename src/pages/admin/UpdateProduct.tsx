@@ -5,7 +5,9 @@ import {
   useGetSingleProductQuery,
   useUpdateSingleProductMutation,
 } from "@/redux/features/product/productApi";
-import { Button, Row } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Row, Upload, UploadProps } from "antd";
+import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -19,8 +21,12 @@ type TUpdatedData = {
   quantity?: number;
 };
 
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
 const UpdateProduct = () => {
   const { productId } = useParams<{ productId: string }>();
+  const [imageUrl, setImageUrl] = useState("");
   // Handle the case where id might be undefined
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
@@ -37,7 +43,7 @@ const UpdateProduct = () => {
     name: data.data.name,
     price: data.data.price,
     description: data.data.description,
-    image: data.data.image,
+    image: imageUrl,
     category: data.data.category,
     quantity: data.data.quantity,
   };
@@ -50,7 +56,7 @@ const UpdateProduct = () => {
         name: data?.name,
         price: Number(data?.price),
         description: data?.description,
-        image: data?.image,
+        image: imageUrl,
         category: data?.category,
         quantity: Number(data?.quantity),
       };
@@ -70,6 +76,27 @@ const UpdateProduct = () => {
     }
   };
 
+  const uploadProps: UploadProps = {
+    action: image_hosting_api,
+    name: "image",
+    listType: "picture",
+    onChange({ file }) {
+      if (file.status === "done") {
+        const uploadedImageUrl = file.response.data.url;
+        setImageUrl(uploadedImageUrl);
+        toast.success("Image uploaded successfully!");
+      } else if (file.status === "error") {
+        toast.error("Image upload failed");
+      } else if (file.status === "removed") {
+        setImageUrl("");
+        toast.info("Image removed");
+      }
+    },
+    onRemove(file) {
+      setImageUrl("");
+    },
+  };
+
   return (
     <Row justify="center" align="middle" style={{ height: "100vh" }}>
       <UseForm onSubmit={onSubmit} defaultValues={defaultValues}>
@@ -81,6 +108,9 @@ const UpdateProduct = () => {
           label="Description :"
         ></FormInput>
         <FormInput type="text" name="image" label="Image Url :"></FormInput>
+        <Upload {...uploadProps}>
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>
         <FormInput type="text" name="category" label="Category :"></FormInput>
         <FormInput type="number" name="quantity" label="Quantity :"></FormInput>
         <Button htmlType="submit">Update</Button>

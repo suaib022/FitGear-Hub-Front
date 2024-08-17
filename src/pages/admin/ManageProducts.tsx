@@ -46,7 +46,7 @@ const ManageProduct = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetallProductsQuery(undefined);
+  } = useGetallProductsQuery({ limit: 5000 });
 
   if (isLoading) {
     return (

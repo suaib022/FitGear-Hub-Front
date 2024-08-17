@@ -14,7 +14,7 @@ const ProductDetails = () => {
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
   }
-  console.log({ productId });
+
   const { data } = useGetSingleProductQuery(productId);
 
   console.log("single product:", data?.data);
