@@ -4,10 +4,12 @@ import { baseApi } from "@/redux/api/baseApi";
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getallProducts: builder.query({
-      query: () => ({
+      query: (query) => ({
         url: "/products",
         method: "GET",
+        params: query,
       }),
+      providesTags: ["base"],
     }),
     getSingleProduct: builder.query({
       query: (productId: string) => ({
@@ -21,6 +23,7 @@ const productApi = baseApi.injectEndpoints({
         method: "POST",
         body: productData,
       }),
+      invalidatesTags: ["base"],
     }),
     deleteSingleProduct: builder.mutation({
       query: (productId: string) => ({
@@ -28,6 +31,7 @@ const productApi = baseApi.injectEndpoints({
         method: "DELETE",
         params: { productId },
       }),
+      invalidatesTags: ["base"],
     }),
     deleteMultipleProducts: builder.mutation({
       query: (ids: string[]) => ({
@@ -35,6 +39,7 @@ const productApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { ids },
       }),
+      invalidatesTags: ["base"],
     }),
     updateSingleProduct: builder.mutation({
       query: ({ productId, updatedData }) => ({
@@ -42,6 +47,7 @@ const productApi = baseApi.injectEndpoints({
         method: "PUT",
         body: updatedData,
       }),
+      invalidatesTags: ["base"],
     }),
   }),
 });

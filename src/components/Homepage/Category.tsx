@@ -11,7 +11,7 @@ import packages from "../../assets/Icons/package.png";
 
 const Category = () => {
   return (
-    <div className="text-center text-sm font-medium flex lg:justify-center pb-6 gap-12 overflow-y-auto px-4">
+    <div className="text-center mt-8 pt-4 rounded-md bg-gray-200 text-sm font-medium flex lg:justify-center pb-6 gap-12 overflow-y-auto px-4">
       <div className="flex flex-col justify-center items-center">
         <img style={{ maxWidth: 42 }} src={cardio} alt="" />
         <h1>Cardio</h1>

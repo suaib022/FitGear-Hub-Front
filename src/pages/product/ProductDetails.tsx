@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
-import { Button } from "antd";
 import { RxCrossCircled } from "react-icons/rx";
 
 import { FaCheckCircle, FaFontAwesome } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/features/cart/cartSlice";
+import { Button } from "@/components/ui/button";
 
 const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -60,7 +60,7 @@ const ProductDetails = () => {
         <p className="">Description : {description}</p>
         <Button
           onClick={handleAddToCart}
-          className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700"
+          className="bg-rose-600 hover:text-white max-w-24 border-rose-700"
         >
           Add To Cart
         </Button>
@@ -69,7 +69,7 @@ const ProductDetails = () => {
           {inStock ? (
             <>
               <FaCheckCircle className="text-green-500" />
-              <p>In stock</p>
+              <p>In stock</p>({quantity} pieces available)
             </>
           ) : (
             <>
@@ -77,7 +77,6 @@ const ProductDetails = () => {
               <p>Out Of stock</p>
             </>
           )}
-          ({quantity} pieces available)
         </h2>
       </div>
     </div>

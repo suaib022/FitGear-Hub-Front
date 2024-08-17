@@ -10,13 +10,13 @@ import {
 import { addToCart } from "@/redux/features/cart/cartSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const MAX_DESCRIPTION_LENGTH = 70;
 const MAX_NAME_LENGTH = 20;
 
 const ProductCard = ({ product }) => {
-  //   console.log("products: ", product);
+  const navigate = useNavigate();
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
@@ -96,8 +96,11 @@ const ProductCard = ({ product }) => {
             </CardDescription>
           </div>
           <div className="flex justify-between ">
-            <Button className="bg-blue-500 hover:bg-rose-600">
-              <NavLink to={`/products/${product?._id}`}> Details</NavLink>
+            <Button
+              onClick={() => navigate(`/products/${product?._id}`)}
+              className="bg-blue-500 hover:bg-rose-600"
+            >
+              Details
             </Button>
             <Button
               onClick={handleAddToCart}

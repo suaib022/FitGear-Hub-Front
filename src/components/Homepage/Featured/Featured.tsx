@@ -2,6 +2,8 @@ import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Spin } from "antd";
 import FeaturedCard from "./Card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Featured = () => {
   const {
@@ -10,6 +12,8 @@ const Featured = () => {
     isLoading,
   } = useGetallProductsQuery(undefined);
   console.log({ products });
+
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -27,7 +31,7 @@ const Featured = () => {
   }
 
   return (
-    <div>
+    <div className="bg-gray-200">
       <h2 className="text-4xl text-center font-bold my-12 mx-auto flex justify-center">
         Featured Equipments
       </h2>
@@ -36,6 +40,12 @@ const Featured = () => {
           <FeaturedCard key={item?._id} item={item} />
         ))}
       </div>
+      <Button
+        onClick={() => navigate("/products")}
+        className="mt-8 bg-rose-500 w-40 mx-auto flex"
+      >
+        Explore More
+      </Button>
     </div>
   );
 };

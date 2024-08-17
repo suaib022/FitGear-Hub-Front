@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card } from "antd";
 import "./FeaturedCard.css";
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const { Meta } = Card;
 
 const FeaturedCard = ({ item }) => {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div
@@ -16,7 +17,7 @@ const FeaturedCard = ({ item }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <Card
-        className={`border border-red-500 ${hovered ? "hovered-card " : ""}`}
+        className={` ${hovered ? "hovered-card " : ""}`}
         hoverable
         style={{ width: 240, position: "relative", overflow: "hidden" }}
         cover={
@@ -28,8 +29,11 @@ const FeaturedCard = ({ item }) => {
         }
       >
         <Meta title={item.name} description="" />
-        <Button className="hover-button w-full rounded-none bg-blue-500 text-white h-10 hover:bg-rose-500">
-          <NavLink to={`/products/${item?._id}`}> Details</NavLink>
+        <Button
+          onClick={() => navigate(`/products/${item?._id}`)}
+          className="hover-button w-full rounded-none bg-blue-500 text-white h-10 hover:bg-rose-500"
+        >
+          Details
         </Button>
       </Card>
     </div>
