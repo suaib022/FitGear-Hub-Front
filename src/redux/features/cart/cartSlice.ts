@@ -25,33 +25,22 @@ const cartSlice = createSlice({
         state.push(action.payload);
       }
     },
-    deleteOneCartItem: (state, action) => {
-      const matchedItem = state.find((item) => item._id === action.payload._id);
-      if (matchedItem) {
-        state.pop(matchedItem);
-      }
-    },
-    deleteMultipleCartItems: (state, action) => {
+    deleteCartItems: (state, action) => {
       const { selectedItems } = action.payload;
-      const x = state.length;
 
-      console.log({ selectedItems });
-      for (let i = 0; i < x; i++) {
-        console.log({ i });
+      selectedItems.forEach((selectedItem) => {
         const matchedIndex = state.findIndex(
-          (item) => item?._id === selectedItems[i]?._id
+          (item) => item._id === selectedItem._id
         );
-        console.log({ matchedIndex });
         if (matchedIndex !== -1) {
           state.splice(matchedIndex, 1);
         }
-      }
+      });
     },
   },
 });
 
-export const { addToCart, deleteOneCartItem, deleteMultipleCartItems } =
-  cartSlice.actions;
+export const { addToCart, deleteCartItems } = cartSlice.actions;
 
 export default cartSlice.reducer;
 

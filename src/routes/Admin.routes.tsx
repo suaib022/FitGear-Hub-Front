@@ -7,6 +7,7 @@ import ProductDetails from "@/pages/product/ProductDetails";
 import Cart from "@/pages/Cart/Cart";
 import UpdateProduct from "@/pages/admin/UpdateProduct";
 import Home from "@/pages/Homepage/Home";
+import Checkout from "@/components/Checkout/Checkout";
 
 export const adminPaths = [
   { name: "Dashboard", path: "dashboard", element: <AdminDashboard /> },
@@ -50,5 +51,10 @@ export const adminPaths = [
     name: "",
     element: <Home />,
     path: "/",
+  },
+  {
+    name: "",
+    element: <Checkout />,
+    path: "/checkout",
   },
 ];

@@ -1,16 +1,14 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import UseForm from "@/components/form/Form";
-import FormInput from "@/components/form/Input";
 import {
   useGetSingleProductQuery,
   useUpdateSingleProductMutation,
 } from "@/redux/features/product/productApi";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Row, Upload, UploadProps } from "antd";
-import { useState } from "react";
-import { FieldValues } from "react-hook-form";
+import { Button, Form, Input, Select, Upload, UploadProps } from "antd";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import img from "../../assets/Form/1.png";
 import { toast } from "sonner";
+import TextArea from "antd/es/input/TextArea";
 
 type TUpdatedData = {
   name?: string;
@@ -27,39 +25,54 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 const UpdateProduct = () => {
   const { productId } = useParams<{ productId: string }>();
   const [imageUrl, setImageUrl] = useState("");
-  // Handle the case where id might be undefined
+  const [Category, setCategory] = useState("");
+  const [disableUploadButton, setDisableUploadButton] = useState(false);
+  const [form] = Form.useForm();
+
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
   }
 
-  const { data, isLoading } = useGetSingleProductQuery(productId);
+  const { data: productData, isLoading } = useGetSingleProductQuery(productId);
   const [updateSingleProduct] = useUpdateSingleProductMutation();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (productData?.data) {
+      const { name, price, description, image, category, quantity } =
+        productData.data;
+      setCategory(category);
+      setImageUrl(image);
+      form.setFieldsValue({
+        name,
+        price,
+        description,
+        image,
+        category,
+        quantity,
+      });
+    }
+  }, [productData, form]);
 
-  const defaultValues = {
-    name: data.data.name,
-    price: data.data.price,
-    description: data.data.description,
-    image: imageUrl,
-    category: data.data.category,
-    quantity: data.data.quantity,
+  const onCategorySelect = (value, label) => {
+    setCategory(label);
   };
 
-  const onSubmit = async (data: FieldValues) => {
+  console.log({ Category });
+
+  const onFinish = async (values) => {
     let toastId;
     try {
       toastId = toast.loading("Updating product...");
       const updatedData: TUpdatedData = {
-        name: data?.name,
-        price: Number(data?.price),
-        description: data?.description,
-        image: imageUrl,
-        category: data?.category,
-        quantity: Number(data?.quantity),
+        name: values.name,
+        price: Number(values.price),
+        description: values.description,
+        image: values.image || imageUrl, // Use the updated image URL
+        category: values.category || Category.label,
+        quantity: Number(values.quantity),
       };
+
+      console.log({ updatedData });
 
       const res = await updateSingleProduct({
         productId,
@@ -72,7 +85,6 @@ const UpdateProduct = () => {
       });
     } catch (err) {
       toast.error("Something went wrong", { id: toastId, duration: 2000 });
-      console.log({ err });
     }
   };
 
@@ -83,39 +95,138 @@ const UpdateProduct = () => {
     onChange({ file }) {
       if (file.status === "done") {
         const uploadedImageUrl = file.response.data.url;
+        setDisableUploadButton(true);
         setImageUrl(uploadedImageUrl);
+        form.setFieldsValue({ image: uploadedImageUrl });
         toast.success("Image uploaded successfully!");
       } else if (file.status === "error") {
         toast.error("Image upload failed");
-      } else if (file.status === "removed") {
-        setImageUrl("");
-        toast.info("Image removed");
       }
     },
-    onRemove(file) {
+    onRemove() {
       setImageUrl("");
+      form.setFieldsValue({ image: "" });
+      setDisableUploadButton(false);
     },
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <Row justify="center" align="middle" style={{ height: "100vh" }}>
-      <UseForm onSubmit={onSubmit} defaultValues={defaultValues}>
-        <FormInput type="text" name="name" label="Name :"></FormInput>
-        <FormInput type="number" name="price" label="Price :"></FormInput>
-        <FormInput
-          type="text"
-          name="description"
-          label="Description :"
-        ></FormInput>
-        <FormInput type="text" name="image" label="Image Url :"></FormInput>
-        <Upload {...uploadProps}>
-          <Button icon={<UploadOutlined />}>Upload</Button>
-        </Upload>
-        <FormInput type="text" name="category" label="Category :"></FormInput>
-        <FormInput type="number" name="quantity" label="Quantity :"></FormInput>
-        <Button htmlType="submit">Update</Button>
-      </UseForm>
-    </Row>
+    <div className="md:flex">
+      <img className="hidden md:block md:w-1/2" src={img} alt="" />
+      <div className="md:w-1/2 bg-blue-50 shadow-xl py-8 rounded-3xl">
+        <h2 className="text-3xl font-semibold ml-8 mb-6">Update Product </h2>
+
+        <Form
+          form={form}
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <div className="">
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: "Please enter your name!" }]}
+            >
+              <Input className="max-w-72" />
+            </Form.Item>
+
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[{ required: true, message: "Please enter your price!" }]}
+            >
+              <Input className="max-w-72" type="number" />
+            </Form.Item>
+
+            <Form.Item
+              name="description"
+              rules={[
+                {
+                  required: true,
+                  message: "Please provide your description!",
+                },
+              ]}
+              label="Description"
+            >
+              <TextArea className=" w-[470px]" rows={4} />
+            </Form.Item>
+
+            <Form.Item label="Image" name="image">
+              <Input value={imageUrl} className="max-w-72" type="text" />
+              <Upload {...uploadProps}>
+                <Button
+                  disabled={disableUploadButton}
+                  icon={<UploadOutlined />}
+                >
+                  Upload
+                </Button>
+              </Upload>
+            </Form.Item>
+
+            <Form.Item
+              label="Category"
+              name="category"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your category!",
+                },
+              ]}
+            >
+              <Select
+                onSelect={onCategorySelect}
+                value={Category}
+                showSearch
+                placeholder="Select a category"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={[
+                  { value: "Cardio", label: "Cardio" },
+                  { value: "Strength", label: "Strength" },
+                  { value: "Functional", label: "Functional" },
+                  { value: "Bodyweight", label: "Bodyweight" },
+                  { value: "Accessories", label: "Accessories" },
+                  { value: "Recovery", label: "Recovery" },
+                  { value: "Flooring", label: "Flooring" },
+                  { value: "Storage", label: "Storage" },
+                  { value: "Specialty", label: "Specialty" },
+                  { value: "Gym Packages", label: "Gym Packages" },
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Quantity"
+              name="quantity"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your quantity!",
+                },
+              ]}
+            >
+              <Input className="max-w-72" type="number" />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
+      </div>
+    </div>
   );
 };
 

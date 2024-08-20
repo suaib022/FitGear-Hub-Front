@@ -1,13 +1,14 @@
 import {
-  deleteMultipleCartItems,
-  deleteOneCartItem,
+  deleteCartItems,
   getAllCartItems,
 } from "@/redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import React, { useState } from "react";
-import { Button, Table } from "antd";
+import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
+import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -26,7 +27,9 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState<DataType[]>([]);
   const [showMultipleDeleteButton, setShowMultipleDeleteButton] =
     useState(false);
+  const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const cartItems = useAppSelector(getAllCartItems);
@@ -58,17 +61,30 @@ const Cart = () => {
 
   // actions
   const handleDeleteOne = (key: React.Key) => {
-    console.log("key num :", key);
-
-    const selectedOne = data.find((item) => item.key === key);
+    setLoading(true);
+    const selectedOne: DataType = data.find((item) => item.key === key);
 
     console.log("selected", selectedOne);
 
-    dispatch(deleteOneCartItem(selectedOne));
+    if (selectedOne) {
+      dispatch(deleteCartItems({ selectedItems: [selectedOne] }));
+    }
+
+    setLoading(false);
+
+    setSelectedItems([]);
+    console.log({ selectedItems });
   };
 
+  console.log({ loading });
+
   const handleDeleteMultiple = () => {
-    dispatch(deleteMultipleCartItems({ selectedItems }));
+    if (selectedItems.length > 0) {
+      dispatch(deleteCartItems({ selectedItems }));
+      setSelectedRowKeys([]);
+      setSelectedItems([]);
+      setShowMultipleDeleteButton(false);
+    }
   };
 
   // row and column
@@ -112,7 +128,11 @@ const Cart = () => {
           danger
           onClick={() => handleDeleteOne(record.key)}
         >
-          <RiDeleteBin6Fill className="w-full h-full" />
+          {loading ? (
+            "Deleting..."
+          ) : (
+            <RiDeleteBin6Fill className="w-full h-full" />
+          )}
         </Button>
       ),
     },
@@ -131,6 +151,18 @@ const Cart = () => {
         ""
       )}
       <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      {cartItems.length ? (
+        <div className="flex justify-end mt-6">
+          <Button
+            onClick={() => navigate("/checkout")}
+            className="w-36 h-10 font-semibold bg-rose-600 text-white hover:bg-red-600"
+          >
+            Checkout
+          </Button>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
