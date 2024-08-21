@@ -16,7 +16,7 @@ const categories = [
   "Cardio",
   "Strength",
   "Functional",
-  "Bodyweight",
+  "Body Weight",
   "Accessories",
   "Recovery",
   "Flooring",
@@ -37,6 +37,8 @@ const FilterDrawer = ({
   setCheckedList,
   sortByPrice,
   allProducts,
+  setCategory,
+  setSortByPrice,
 }) => {
   const [accordionValue, setAccordionValue] = useState("item-1");
   const [accordion2Value, setAccordion2Value] = useState("item-2");
@@ -46,8 +48,6 @@ const FilterDrawer = ({
   const checkAll = categories.length === checkedList.length;
   const indeterminate =
     checkedList.length > 0 && checkedList.length < categories.length;
-
-  const { data: products } = useGetallProductsQuery(undefined);
 
   const onSliderChange = (newRange) => {
     setRange(newRange);
@@ -69,6 +69,7 @@ const FilterDrawer = ({
 
   const onCheckAllChange = (e) => {
     setCheckedList(e.target.checked ? categories : []);
+    setCategory(e.target.checked ? categories : []);
     if (e.target.checked) {
       setDisabledButton(true);
     }
@@ -79,6 +80,7 @@ const FilterDrawer = ({
       setDisabledButton(true);
     }
     setCheckedList(list);
+    setCategory(list);
   };
 
   const handleInStockChange = (e) => {
@@ -107,6 +109,7 @@ const FilterDrawer = ({
     if (allProducts?.data) {
       const highestPrice = getMaxPrice(allProducts?.data);
       setHighest(highestPrice);
+      setRange([range[0], highestPrice]);
     }
   }, [allProducts]);
 
@@ -126,13 +129,22 @@ const FilterDrawer = ({
     }
   }, [checkedList, inStock, range, highest, sortByPrice]);
 
+  const handleClearFilter = () => {
+    setCheckedList([]);
+    setInStock();
+    setRange(0, highest);
+    setSortByPrice("");
+  };
+
   // console.log({ checkedList, inStock });
   // console.log({ disabledButton });
-  // console.log(range);
+  console.log(range);
 
   return (
     <>
-      <Button onClick={showDrawer}>Filter</Button>
+      <Button className="sm:w-2/4 w-2/5" onClick={showDrawer}>
+        Filter
+      </Button>
       <Drawer title="Filter Options" onClose={onClose} open={open}>
         <div className="justify-end flex ">
           {disabledButton ? (
@@ -151,7 +163,11 @@ const FilterDrawer = ({
         />
         <div className="flex justify-between mt-4">
           <Input className="w-1/4" value={range[0]} onChange={onLowestChange} />
-          <Input className="w-1/4" value={highest} onChange={onHighestChange} />
+          <Input
+            className="w-1/4"
+            value={range[1]}
+            onChange={onHighestChange}
+          />
         </div>
 
         <Accordion

@@ -10,7 +10,7 @@ const Featured = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetallProductsQuery(undefined);
+  } = useGetallProductsQuery({ limit: 4 });
   console.log({ products });
 
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ const Featured = () => {
   }
 
   return (
-    <div className="bg-gray-200">
-      <h2 className="text-4xl text-center font-bold my-12 mx-auto flex justify-center">
+    <div className="bg-gray-200 rounded-md">
+      <h2 className="text-4xl text-center font-bold my-12 mx-auto flex pt-6 justify-center">
         Featured Equipments
       </h2>
       <div className="grid text-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -40,12 +40,14 @@ const Featured = () => {
           <FeaturedCard key={item?._id} item={item} />
         ))}
       </div>
-      <Button
-        onClick={() => navigate("/products")}
-        className="mt-8 bg-rose-500 w-40 mx-auto flex"
-      >
-        Explore More
-      </Button>
+      <div className="pb-6">
+        <Button
+          onClick={() => navigate("/products")}
+          className="mt-8 bg-rose-500 w-40 mx-auto flex"
+        >
+          Explore More
+        </Button>
+      </div>
     </div>
   );
 };

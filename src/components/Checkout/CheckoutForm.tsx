@@ -2,6 +2,9 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Form, FormProps } from "antd";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
+import { useAppDispatch } from "@/redux/hooks";
+import { useOutletContext } from "react-router-dom";
+import { deleteCartItems } from "@/redux/features/cart/cartSlice";
 
 type FieldType = {
   name?: string;
@@ -11,11 +14,11 @@ type FieldType = {
   receiveFrom?: string;
 };
 
-//   const { TextArea } = Input;
-
 const CheckoutForm = ({ setPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useAppDispatch();
+  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     console.log("Success:", values);
@@ -44,6 +47,8 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
       toast.error(error.message, { duration: 2000, id: toastId });
     } else {
       toast.success("Payment Successful !!!", { id: toastId, duration: 2000 });
+      dispatch(deleteCartItems({ selectedCartItems }));
+      setSelectedCartItems([]);
       setPaymentSuccess(true);
     }
   };

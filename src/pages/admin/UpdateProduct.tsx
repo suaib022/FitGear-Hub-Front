@@ -67,7 +67,7 @@ const UpdateProduct = () => {
         name: values.name,
         price: Number(values.price),
         description: values.description,
-        image: values.image || imageUrl, // Use the updated image URL
+        image: values.image || imageUrl,
         category: values.category || Category.label,
         quantity: Number(values.quantity),
       };

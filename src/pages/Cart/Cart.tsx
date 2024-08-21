@@ -8,7 +8,7 @@ import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -24,10 +24,11 @@ interface DataType {
 
 const Cart = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectedItems, setSelectedItems] = useState<DataType[]>([]);
   const [showMultipleDeleteButton, setShowMultipleDeleteButton] =
     useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -48,7 +49,7 @@ const Cart = () => {
     setSelectedRowKeys(newSelectedRowKeys);
 
     const items = data.filter((item) => newSelectedRowKeys.includes(item.key));
-    setSelectedItems(items);
+    setSelectedCartItems(items);
 
     if (items.length > 1) {
       setShowMultipleDeleteButton(true);
@@ -57,7 +58,7 @@ const Cart = () => {
     }
   };
 
-  console.log({ selectedItems });
+  console.log({ selectedCartItems });
 
   // actions
   const handleDeleteOne = (key: React.Key) => {
@@ -67,22 +68,22 @@ const Cart = () => {
     console.log("selected", selectedOne);
 
     if (selectedOne) {
-      dispatch(deleteCartItems({ selectedItems: [selectedOne] }));
+      dispatch(deleteCartItems({ selectedCartItems: [selectedOne] }));
     }
 
     setLoading(false);
 
-    setSelectedItems([]);
-    console.log({ selectedItems });
+    setSelectedCartItems([]);
+    console.log({ selectedCartItems });
   };
 
   console.log({ loading });
 
   const handleDeleteMultiple = () => {
-    if (selectedItems.length > 0) {
-      dispatch(deleteCartItems({ selectedItems }));
+    if (selectedCartItems.length > 0) {
+      dispatch(deleteCartItems({ selectedCartItems }));
       setSelectedRowKeys([]);
-      setSelectedItems([]);
+      setSelectedCartItems([]);
       setShowMultipleDeleteButton(false);
     }
   };
@@ -123,9 +124,7 @@ const Cart = () => {
       dataIndex: "action",
       render: (_, record) => (
         <Button
-          className="w-12"
-          type="primary"
-          danger
+          className="w-12 bg-rose-500"
           onClick={() => handleDeleteOne(record.key)}
         >
           {loading ? (
@@ -154,8 +153,9 @@ const Cart = () => {
       {cartItems.length ? (
         <div className="flex justify-end mt-6">
           <Button
+            disabled={selectedCartItems.length === 0}
             onClick={() => navigate("/checkout")}
-            className="w-36 h-10 font-semibold bg-rose-600 text-white hover:bg-red-600"
+            className="w-36 h-10 font-semibold bg-blue-600 text-white hover:bg-rose-600"
           >
             Checkout
           </Button>

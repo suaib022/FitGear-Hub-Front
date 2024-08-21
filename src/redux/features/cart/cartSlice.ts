@@ -26,9 +26,9 @@ const cartSlice = createSlice({
       }
     },
     deleteCartItems: (state, action) => {
-      const { selectedItems } = action.payload;
+      const { selectedCartItems } = action.payload;
 
-      selectedItems.forEach((selectedItem) => {
+      selectedCartItems.forEach((selectedItem) => {
         const matchedIndex = state.findIndex(
           (item) => item._id === selectedItem._id
         );

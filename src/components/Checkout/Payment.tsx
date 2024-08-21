@@ -4,7 +4,6 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { Form, Radio, Result } from "antd";
 import { useState } from "react";
-import { Button } from "../ui/button";
 
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_GATEWAY_PK);
 
@@ -12,6 +11,8 @@ const Payment = ({
   paymentSuccess,
   setPaymentSuccess,
   setDisableProceedButton,
+  paymentMethod,
+  setPaymentMethod,
 }) => {
   const [showCardForm, setShowCardForm] = useState(false);
 
@@ -20,7 +21,7 @@ const Payment = ({
   };
 
   const handlePaymentMethodChange = (e: any) => {
-    const paymentMethod = e.target.value;
+    setPaymentMethod(e.target.value);
     setShowCardForm(paymentMethod === "card");
     if (paymentMethod === "cash") {
       setDisableProceedButton(false);
@@ -28,6 +29,8 @@ const Payment = ({
       setDisableProceedButton(true);
     }
   };
+
+  console.log({ paymentMethod });
 
   return (
     <div>
@@ -59,7 +62,10 @@ const Payment = ({
               ]}
               label="Select Payment Method "
             >
-              <Radio.Group onChange={handlePaymentMethodChange}>
+              <Radio.Group
+                defaultValue={paymentMethod}
+                onChange={handlePaymentMethodChange}
+              >
                 <Radio value="cash">Cash On Delivery</Radio>
                 <Radio value="card">Pay With Card</Radio>
               </Radio.Group>
@@ -67,7 +73,7 @@ const Payment = ({
           </Form>
 
           <div className="mt-12">
-            {showCardForm && (
+            {paymentMethod === "card" && (
               <Elements stripe={stripePromise}>
                 <CheckoutForm setPaymentSuccess={setPaymentSuccess} />
               </Elements>

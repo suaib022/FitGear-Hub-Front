@@ -16,7 +16,7 @@ const categories = [
   "Cardio",
   "Strength",
   "Functional",
-  "Bodyweight",
+  "Body Weight",
   "Accessories",
   "Recovery",
   "Flooring",
@@ -26,6 +26,7 @@ const categories = [
 ];
 
 const Filter = ({
+  setCategory,
   range,
   setRange,
   inStock,
@@ -66,10 +67,12 @@ const Filter = ({
 
   const onCheckAllChange = (e) => {
     setCheckedList(e.target.checked ? categories : []);
+    setCategory(e.target.checked ? categories : []);
   };
 
   const onChange2 = (list) => {
     setCheckedList(list);
+    setCategory(list);
   };
 
   const handleInStockChange = (e) => {
@@ -79,6 +82,13 @@ const Filter = ({
       setInStock();
     }
   };
+
+  useEffect(() => {
+    if (allProducts?.data) {
+      const highestPrice = getMaxPrice(allProducts.data);
+      setRange([range[0], highestPrice]);
+    }
+  }, [allProducts]);
 
   useEffect(() => {
     if (

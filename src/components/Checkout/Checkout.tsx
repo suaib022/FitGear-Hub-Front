@@ -3,9 +3,10 @@ import { Button, message, Steps, theme } from "antd";
 import Payment from "./Payment";
 import OrderSummary from "./OrderSummary";
 import UserDetailsForm from "./UserDetailsForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAppDispatch } from "@/redux/hooks";
 import { removeUserDetails } from "@/redux/features/UserDetails/userDetailsSlice";
+import { deleteCartItems } from "@/redux/features/cart/cartSlice";
 
 const Checkout = () => {
   const { token } = theme.useToken();
@@ -14,9 +15,12 @@ const Checkout = () => {
   const [disableProceedButton, setDisableProceedButton] = useState(false);
   const [userDetailsMissing, setUserDetailsMissing] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
 
   const steps = [
     {
@@ -36,6 +40,8 @@ const Checkout = () => {
       title: "Payment",
       content: (
         <Payment
+          paymentMethod={paymentMethod}
+          setPaymentMethod={setPaymentMethod}
           setDisableProceedButton={setDisableProceedButton}
           paymentSuccess={paymentSuccess}
           setPaymentSuccess={setPaymentSuccess}
@@ -44,7 +50,6 @@ const Checkout = () => {
     },
   ];
 
-  // console.log({ userDetailsMissing });
   console.log({ disableProceedButton });
 
   const next = () => {
@@ -56,8 +61,6 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    // const isUserDetailsStep = current === 1;
-    // setDisableNextButton(isUserDetailsStep && userDetailsMissing);
     if (userDetailsMissing && current === 1) {
       setDisableNextButton(true);
     } else {
@@ -66,12 +69,14 @@ const Checkout = () => {
   }, [userDetailsMissing, current]);
 
   useEffect(() => {
-    if (!paymentSuccess && current === 2) {
+    if (paymentMethod === "cash") {
+      setDisableProceedButton(false);
+    } else if (!paymentSuccess && current === 2) {
       setDisableProceedButton(true);
     } else {
       setDisableProceedButton(false);
     }
-  }, [paymentSuccess, current, setDisableProceedButton]);
+  }, [paymentSuccess, current, setDisableProceedButton, paymentMethod]);
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
@@ -91,6 +96,10 @@ const Checkout = () => {
   };
 
   const onProceed = () => {
+    if (paymentMethod === "cash") {
+      dispatch(deleteCartItems({ selectedCartItems }));
+      setSelectedCartItems([]);
+    }
     navigate("/");
     dispatch(removeUserDetails());
   };

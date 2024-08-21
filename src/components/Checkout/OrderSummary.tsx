@@ -3,6 +3,7 @@ import { useAppSelector } from "@/redux/hooks";
 import React from "react";
 import { Table } from "antd";
 import type { TableColumnsType } from "antd";
+import { useOutletContext } from "react-router-dom";
 
 interface DataType {
   key: React.Key;
@@ -16,9 +17,9 @@ interface DataType {
 }
 
 const OrderSummary = () => {
-  const cartItems = useAppSelector(getAllCartItems);
+  const { selectedCartItems } = useOutletContext();
 
-  const data: DataType[] = cartItems.map((item, index) => ({
+  const data: DataType[] = selectedCartItems.map((item, index) => ({
     key: index,
     _id: item._id,
     image: item.image,
