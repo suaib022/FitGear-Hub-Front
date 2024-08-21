@@ -6,7 +6,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Select, Upload, UploadProps } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import img from "../../assets/Form/1.png";
+import img from "../../assets/Form/2.png";
 import { toast } from "sonner";
 import TextArea from "antd/es/input/TextArea";
 

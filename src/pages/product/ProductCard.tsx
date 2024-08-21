@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card className="">
+    <Card className="rounded-2xl shadow-md">
       <CardHeader className="gap-2">
         <CardTitle>
           {truncateName}

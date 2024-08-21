@@ -145,10 +145,15 @@ const FilterDrawer = ({
       <Button className="sm:w-2/4 w-2/5" onClick={showDrawer}>
         Filter
       </Button>
-      <Drawer title="Filter Options" onClose={onClose} open={open}>
+      <Drawer
+        className="rounded-xl"
+        title="Filter Options"
+        onClose={onClose}
+        open={open}
+      >
         <div className="justify-end flex ">
           {disabledButton ? (
-            <Button className="bg-rose-600">Clear Filter</Button>
+            <Button className="bg-red-600">Clear Filter</Button>
           ) : (
             ""
           )}

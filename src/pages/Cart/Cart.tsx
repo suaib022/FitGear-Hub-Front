@@ -9,6 +9,7 @@ import type { TableColumnsType, TableProps } from "antd";
 import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import img from "../../assets/Result/no-data-found.png";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -139,29 +140,41 @@ const Cart = () => {
 
   return (
     <div>
-      {showMultipleDeleteButton ? (
-        <Button
-          onClick={handleDeleteMultiple}
-          className="bg-red-600 text-white hover:bg-rose-600"
-        >
-          Delete Selected
-        </Button>
-      ) : (
-        ""
-      )}
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
-      {cartItems.length ? (
-        <div className="flex justify-end mt-6">
-          <Button
-            disabled={selectedCartItems.length === 0}
-            onClick={() => navigate("/checkout")}
-            className="w-36 h-10 font-semibold bg-blue-600 text-white hover:bg-rose-600"
-          >
-            Checkout
-          </Button>
+      {cartItems.length === 0 ? (
+        <div className="flex justify-center">
+          <img src={img} style={{ maxWidth: 350 }} alt="" />
         </div>
       ) : (
-        ""
+        <div>
+          {showMultipleDeleteButton ? (
+            <Button
+              onClick={handleDeleteMultiple}
+              className="bg-red-600 text-white hover:bg-rose-600"
+            >
+              Delete Selected
+            </Button>
+          ) : (
+            ""
+          )}
+          <Table
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={data}
+          />
+          {cartItems.length ? (
+            <div className="flex justify-end mt-6">
+              <Button
+                disabled={selectedCartItems.length === 0}
+                onClick={() => navigate("/checkout")}
+                className="w-36 h-10 font-semibold bg-blue-600 text-white hover:bg-rose-600"
+              >
+                Checkout
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
       )}
     </div>
   );

@@ -14,7 +14,7 @@ const HeaderComponent = () => {
             <img src={logo} className="w-28 " alt="" />
           </NavLink>
         </div>
-        <div className="text-red-500 lg:block hidden w-1/3">
+        <div className="lg:block text-white hidden w-1/3">
           <ul className="flex justify-between items-center">
             <li>
               <NavLink to={"/"}>Home</NavLink>

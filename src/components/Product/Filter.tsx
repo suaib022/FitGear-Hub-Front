@@ -128,10 +128,10 @@ const Filter = ({
   // console.log({ highest });
 
   return (
-    <>
+    <div className="bg-gray-200 shadow-xl rounded-md px-8 py-4">
       <div className="justify-end flex ">
         {disabledButton ? (
-          <Button className="bg-rose-600">Clear Filter</Button>
+          <Button className="bg-red-600">Clear Filter</Button>
         ) : (
           ""
         )}
@@ -197,7 +197,7 @@ const Filter = ({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </>
+    </div>
   );
 };
 

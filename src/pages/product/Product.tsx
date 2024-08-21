@@ -12,6 +12,7 @@ import { Select } from "antd";
 import type { PaginationProps } from "antd";
 import { Pagination } from "antd";
 import { useOutletContext } from "react-router-dom";
+import img from "../../assets/Result/no-data-found.png";
 
 const Product = () => {
   const { category, setCategory, checkedList, setCheckedList } =
@@ -139,93 +140,106 @@ const Product = () => {
   console.log({ category });
 
   return (
-    <div className="lg:flex lg:gap-12">
-      <div className="lg:w-1/4 hidden lg:block">
-        <Filter
-          setCategory={setCategory}
-          allProducts={allProducts}
-          sortByPrice={sortByPrice}
-          checkedList={checkedList}
-          setCheckedList={setCheckedList}
-          inStock={inStock}
-          setInStock={setInStock}
-          range={range}
-          setRange={setRange}
-        />
-      </div>
-      <div className="lg:w-3/4">
-        <div className="items-center grid sm:grid-cols-2 md:grid-cols-4 md:gap-4 lg:grid-cols-3 grid-cols-1 mb-4 justify-center  bg-gray-200 px-4 py-4 rounded-md space-y-2">
-          <div className=" flex justify-center ">
-            <Space direction="vertical">
-              <Search
-                className="w-full"
-                placeholder="input search text"
-                allowClear
-                enterButton="Search"
-                size="large"
-                onSearch={onSearch}
-              />
-            </Space>
-          </div>
-          <div className="text-md font-semibold flex justify-center gap-5 items-center ">
-            Show
-            <Space wrap>
-              <Select
-                value={limit}
-                onChange={handleLimitChange}
-                style={{ width: 120 }}
-                options={limitOptions}
-              />
-            </Space>
-          </div>
-          <div className="lg:hidden  flex sm:justify-start md:justify-center justify-center items-center">
-            <FilterDrawer
-              setCategory={setCategory}
-              allProducts={allProducts}
-              sortByPrice={sortByPrice}
-              setSortByPrice={setSortByPrice}
-              checkedList={checkedList}
-              setCheckedList={setCheckedList}
-              inStock={inStock}
-              setInStock={setInStock}
-              range={range}
-              setRange={setRange}
-              open={open}
-              onClose={onClose}
-              showDrawer={showDrawer}
-            />
-          </div>
-          <div className=" flex justify-center items-center  text-md font-semibold gap-2">
-            Sort By
-            <Space wrap>
-              <Select
-                onChange={handleChange}
-                defaultValue="default"
-                style={{ width: 120 }}
-                options={[
-                  { value: "", label: "Default" },
-                  { value: "price", label: "Price (Low > High)" },
-                  { value: "-price", label: "Price (High > Low)" },
-                ]}
-              />
-            </Space>
-          </div>
-        </div>
-        <div className="grid gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2">
-          {products.data.map((product: any) => (
-            <ProductCard product={product} key={product._id}></ProductCard>
-          ))}
-        </div>
-        <div className="mt-12">
-          <Pagination
-            showQuickJumper
-            current={page}
-            pageSize={limit}
-            total={numberOfProducts}
-            onChange={onChange}
-            showSizeChanger
-            onShowSizeChange={onShowSizeChange}
+    <div>
+      <div className="lg:flex lg:gap-12">
+        <div className="lg:w-1/4 hidden lg:block">
+          <Filter
+            setCategory={setCategory}
+            allProducts={allProducts}
+            sortByPrice={sortByPrice}
+            checkedList={checkedList}
+            setCheckedList={setCheckedList}
+            inStock={inStock}
+            setInStock={setInStock}
+            range={range}
+            setRange={setRange}
           />
+        </div>
+        <div className="lg:w-3/4">
+          <div className="items-center grid sm:grid-cols-2 md:grid-cols-4 md:gap-4 lg:grid-cols-3 grid-cols-1 mb-4 justify-center  bg-gray-200 px-4 py-4 rounded-lg shadow-md space-y-2">
+            <div className=" flex justify-center ">
+              <Space direction="vertical">
+                <Search
+                  className="w-full"
+                  placeholder="input search text"
+                  allowClear
+                  enterButton="Search"
+                  size="large"
+                  onSearch={onSearch}
+                />
+              </Space>
+            </div>
+            <div className="text-md font-semibold flex justify-center gap-5 items-center ">
+              Show
+              <Space wrap>
+                <Select
+                  value={limit}
+                  onChange={handleLimitChange}
+                  style={{ width: 120 }}
+                  options={limitOptions}
+                />
+              </Space>
+            </div>
+            <div className="lg:hidden  flex sm:justify-start md:justify-center justify-center items-center">
+              <FilterDrawer
+                setCategory={setCategory}
+                allProducts={allProducts}
+                sortByPrice={sortByPrice}
+                setSortByPrice={setSortByPrice}
+                checkedList={checkedList}
+                setCheckedList={setCheckedList}
+                inStock={inStock}
+                setInStock={setInStock}
+                range={range}
+                setRange={setRange}
+                open={open}
+                onClose={onClose}
+                showDrawer={showDrawer}
+              />
+            </div>
+            <div className=" flex justify-center items-center  text-md font-semibold gap-2">
+              Sort By
+              <Space wrap>
+                <Select
+                  onChange={handleChange}
+                  defaultValue="default"
+                  style={{ width: 120 }}
+                  options={[
+                    { value: "", label: "Default" },
+                    { value: "price", label: "Price (Low > High)" },
+                    { value: "-price", label: "Price (High > Low)" },
+                  ]}
+                />
+              </Space>
+            </div>
+          </div>
+          {products?.data?.length === 0 ? (
+            <div>
+              <img src={img} alt="" />
+            </div>
+          ) : (
+            <div>
+              <div className="grid gap-2 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 bg-gray-200 px-4 py-4 rounded-lg shadow-lg">
+                {products.data.map((product: any) => (
+                  <ProductCard
+                    product={product}
+                    key={product._id}
+                  ></ProductCard>
+                ))}
+              </div>
+              <div className="mt-6 bg-gray-200 shadow-xl rounded-md px-4 py-4">
+                <Pagination
+                  showQuickJumper
+                  current={page}
+                  pageSize={limit}
+                  total={numberOfProducts}
+                  onChange={onChange}
+                  showSizeChanger
+                  onShowSizeChange={onShowSizeChange}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

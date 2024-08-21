@@ -14,6 +14,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import img from "../../assets/Result/no-data-found.png";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -190,7 +191,20 @@ const ManageProduct = () => {
           ""
         )}
       </div>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <div>
+        {data.length === 0 ? (
+          <div className="flex justify-center">
+            <img src={img} style={{ maxWidth: 350 }} alt="" />
+          </div>
+        ) : (
+          <Table
+            className=" "
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={data}
+          />
+        )}
+      </div>
     </div>
   );
 };
