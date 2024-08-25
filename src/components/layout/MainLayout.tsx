@@ -23,6 +23,7 @@ const MainLayout = () => {
   const [category, setCategory] = useState([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [selectedCartItems, setSelectedCartItems] = useState<DataType[]>([]);
+  const [disabledCartButtons, setDisabledCartButtons] = useState([]);
   const [pendingNavigation, setPendingNavigation] = useState<
     (() => void) | null
   >(null);
@@ -69,6 +70,8 @@ const MainLayout = () => {
                 setCheckedList,
                 selectedCartItems,
                 setSelectedCartItems,
+                disabledCartButtons,
+                setDisabledCartButtons,
               }}
             />
           </div>

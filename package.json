@@ -43,6 +43,7 @@
     "redux-persist": "^6.0.0",
     "shadcn": "^1.0.0",
     "sonner": "^1.5.0",
+    "sweetalert2": "^11.12.4",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },

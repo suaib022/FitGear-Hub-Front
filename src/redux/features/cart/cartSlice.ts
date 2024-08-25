@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RootState } from "../../store";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -20,7 +19,7 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const matchedItem = state.find((item) => item._id === action.payload._id);
       if (matchedItem) {
-        matchedItem.quantity += action.payload.quantity;
+        matchedItem.quantity! += action.payload.quantity!;
       } else {
         state.push(action.payload);
       }
@@ -28,7 +27,7 @@ const cartSlice = createSlice({
     deleteCartItems: (state, action) => {
       const { selectedCartItems } = action.payload;
 
-      selectedCartItems.forEach((selectedItem) => {
+      selectedCartItems.forEach((selectedItem: TCart) => {
         const matchedIndex = state.findIndex(
           (item) => item._id === selectedItem._id
         );
@@ -37,10 +36,23 @@ const cartSlice = createSlice({
         }
       });
     },
+    updateCartQuantity: (state, action) => {
+      const { updatedQuantity, _id } = action.payload;
+
+      const itemIndex = state.findIndex((item) => item._id === _id);
+
+      if (itemIndex !== -1) {
+        state[itemIndex] = {
+          ...state[itemIndex],
+          quantity: updatedQuantity,
+        };
+      }
+    },
   },
 });
 
-export const { addToCart, deleteCartItems } = cartSlice.actions;
+export const { addToCart, deleteCartItems, updateCartQuantity } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
 

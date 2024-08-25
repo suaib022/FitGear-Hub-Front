@@ -7,22 +7,73 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { addToCart } from "@/redux/features/cart/cartSlice";
-import { useAppDispatch } from "@/redux/hooks";
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { addToCart, getAllCartItems } from "@/redux/features/cart/cartSlice";
+import { useGetallProductsQuery } from "@/redux/features/product/productApi";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { toast } from "sonner";
 
 const MAX_DESCRIPTION_LENGTH = 70;
 const MAX_NAME_LENGTH = 20;
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
+  const { disabledCartButtons, setDisabledCartButtons } = useOutletContext();
+
+  const {
+    data: allProducts,
+    isLoading: isAllProductsLoading,
+    isError: isAllProductsError,
+  } = useGetallProductsQuery({ limit: 5000 });
+  const allCartItems = useAppSelector(getAllCartItems);
 
   const { _id, name, price, description, image, category, quantity, inStock } =
     product;
+
+  useEffect(() => {
+    if (
+      !isAllProductsLoading &&
+      !isAllProductsError &&
+      allProducts &&
+      allCartItems
+    ) {
+      let disabledButtons = [];
+
+      for (let i = 0; i < allProducts.data?.length; i++) {
+        const product = allProducts.data[i];
+        const existingCartItem = allCartItems.find(
+          (item) => item._id === product?._id
+        );
+
+        if (existingCartItem) {
+          if (existingCartItem?.quantity >= existingCartItem?.quantityInStock) {
+            disabledButtons.push({ [product._id]: true });
+          } else {
+            disabledButtons.push({ [product._id]: false });
+          }
+        } else if (product?.quantity === 0) {
+          disabledButtons.push({ [product._id]: true });
+        } else {
+          disabledButtons.push({ [product._id]: false });
+        }
+      }
+
+      setDisabledCartButtons(disabledButtons);
+    }
+  }, [
+    allCartItems,
+    allProducts,
+    isAllProductsLoading,
+    isAllProductsError,
+    setDisabledCartButtons,
+  ]);
+
+  console.log({ allProducts, allCartItems, disabledCartButtons });
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
@@ -42,8 +93,6 @@ const ProductCard = ({ product }) => {
       ? `${name.substring(0, MAX_NAME_LENGTH)}...`
       : name;
 
-  const dispatch = useAppDispatch();
-
   const handleAddToCart = () => {
     const cartData = {
       _id,
@@ -56,7 +105,20 @@ const ProductCard = ({ product }) => {
     };
 
     dispatch(addToCart(cartData));
+    toast.success("Item added to cart successfully !", {
+      duration: 1500,
+    });
   };
+
+  const isDisabled = disabledCartButtons.find((button) => button[_id] === true);
+
+  if (isAllProductsLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isAllProductsError) {
+    return <div>Something went wrong!</div>;
+  }
 
   return (
     <Card className="rounded-2xl shadow-md">
@@ -103,6 +165,7 @@ const ProductCard = ({ product }) => {
               Details
             </Button>
             <Button
+              disabled={!!isDisabled}
               onClick={handleAddToCart}
               className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700"
               variant="outline"

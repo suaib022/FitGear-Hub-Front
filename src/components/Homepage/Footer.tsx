@@ -4,7 +4,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
-            <h2 className="text-2xl font-bold">FitGear Hub</h2>
+            <h2 className="text-2xl text-white font-bold">FitGear Hub</h2>
             <p>Your ultimate destination for premium fitness equipment.</p>
           </div>
           <div className="w-full md:w-1/3 mb-6 md:mb-0">

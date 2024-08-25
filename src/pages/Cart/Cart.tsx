@@ -1,17 +1,19 @@
 import {
   deleteCartItems,
   getAllCartItems,
+  updateCartQuantity,
 } from "@/redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import React, { useState } from "react";
-import { Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Table } from "antd";
+import type { TableColumnsType } from "antd";
 import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import img from "../../assets/Result/no-data-found.png";
-
-type TableRowSelection<T> = TableProps<T>["rowSelection"];
+import { Space } from "antd";
+import Swal from "sweetalert2";
+import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 
 interface DataType {
   key: React.Key;
@@ -29,12 +31,24 @@ const Cart = () => {
     useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
+  const {
+    selectedCartItems,
+    setSelectedCartItems,
+    disabledCartButtons,
+    setDisabledCartButtons,
+  } = useOutletContext();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const cartItems = useAppSelector(getAllCartItems);
+  const {
+    data: allProducts,
+    isLoading: isAllProductsLoading,
+    isError: isAllProductsError,
+  } = useGetallProductsQuery({ limit: 5000 });
+
+  console.log({ disabledCartButtons });
 
   const data: DataType[] = cartItems.map((item, index) => ({
     key: index,
@@ -42,43 +56,85 @@ const Cart = () => {
     image: item.image,
     name: item.name,
     quantity: item.quantity,
+    quantityInStock: item.quantityInStock,
     price: item.price,
   }));
 
+  useEffect(() => {
+    if (
+      !isAllProductsLoading &&
+      !isAllProductsError &&
+      allProducts &&
+      cartItems
+    ) {
+      let disabledButtons = [];
+
+      for (let i = 0; i < allProducts.data?.length; i++) {
+        const product = allProducts.data[i];
+        const existingCartItem = cartItems.find(
+          (item) => item._id === product?._id
+        );
+
+        if (existingCartItem) {
+          if (existingCartItem?.quantity >= existingCartItem?.quantityInStock) {
+            disabledButtons.push({ [product._id]: true });
+          } else {
+            disabledButtons.push({ [product._id]: false });
+          }
+        } else if (product?.quantity === 0) {
+          disabledButtons.push({ [product._id]: true });
+        } else {
+          disabledButtons.push({ [product._id]: false });
+        }
+      }
+
+      setDisabledCartButtons(disabledButtons);
+    }
+  }, [
+    cartItems,
+    allProducts,
+    isAllProductsLoading,
+    isAllProductsError,
+    setDisabledCartButtons,
+  ]);
+
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
 
     const items = data.filter((item) => newSelectedRowKeys.includes(item.key));
     setSelectedCartItems(items);
 
-    if (items.length > 1) {
-      setShowMultipleDeleteButton(true);
-    } else {
-      setShowMultipleDeleteButton(false);
-    }
+    setShowMultipleDeleteButton(items.length > 1);
   };
 
-  console.log({ selectedCartItems });
-
-  // actions
   const handleDeleteOne = (key: React.Key) => {
-    setLoading(true);
-    const selectedOne: DataType = data.find((item) => item.key === key);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setLoading(true);
+        const selectedOne: DataType = data.find((item) => item.key === key);
 
-    console.log("selected", selectedOne);
+        if (selectedOne) {
+          dispatch(deleteCartItems({ selectedCartItems: [selectedOne] }));
+        }
 
-    if (selectedOne) {
-      dispatch(deleteCartItems({ selectedCartItems: [selectedOne] }));
-    }
-
-    setLoading(false);
-
-    setSelectedCartItems([]);
-    console.log({ selectedCartItems });
+        setLoading(false);
+        setSelectedCartItems([]);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Selected item removed from your cart!",
+          icon: "success",
+        });
+      }
+    });
   };
-
-  console.log({ loading });
 
   const handleDeleteMultiple = () => {
     if (selectedCartItems.length > 0) {
@@ -89,7 +145,30 @@ const Cart = () => {
     }
   };
 
-  // row and column
+  const handleQuantityChange = (value: number, key: React.Key) => {
+    // Find the specific item by its key
+    const updatedItem = data.find((item) => item.key === key);
+
+    if (updatedItem) {
+      const maxQuantity = updatedItem.quantityInStock || 100;
+      const newQuantity = Math.min(value, maxQuantity);
+
+      const updatedItemWithNewQuantity = {
+        ...updatedItem,
+        quantity: newQuantity,
+      };
+
+      console.log({ updatedItemWithNewQuantity, value });
+
+      dispatch(
+        updateCartQuantity({
+          updatedQuantity: newQuantity,
+          _id: updatedItem._id,
+        })
+      );
+    }
+  };
+
   const rowSelection: TableRowSelection<DataType> = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -101,11 +180,7 @@ const Cart = () => {
       title: "Image",
       dataIndex: "image",
       render: (image: string) => (
-        <img
-          // src="https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png"
-          src={image}
-          style={{ width: 70, height: 70 }}
-        />
+        <img src={image} style={{ width: 70, height: 70 }} />
       ),
     },
     {
@@ -115,6 +190,37 @@ const Cart = () => {
     {
       title: "Quantity",
       dataIndex: "quantity",
+      render: (_, record) => (
+        <Space>
+          <Button
+            className="bg-white text-black border border-slate-300 h-8 hover:bg-rose-500 hover:text-white"
+            onClick={() =>
+              handleQuantityChange(
+                record.quantity - 1 > 0 ? record.quantity - 1 : 1,
+                record.key
+              )
+            }
+          >
+            -
+          </Button>
+          <Input
+            className="w-12 text-center"
+            min={0}
+            max={record.quantityInStock}
+            value={record.quantity}
+            onChange={(value) => handleQuantityChange(value, record.key)}
+          />
+          <Button
+            className="h-8 bg-white text-black border border-slate-300 hover:bg-rose-500 hover:text-white"
+            onClick={() =>
+              handleQuantityChange(record.quantity + 1, record.key)
+            }
+            disabled={record.quantity === record.quantityInStock}
+          >
+            +
+          </Button>
+        </Space>
+      ),
     },
     {
       title: "Price",
@@ -146,22 +252,20 @@ const Cart = () => {
         </div>
       ) : (
         <div>
-          {showMultipleDeleteButton ? (
+          {showMultipleDeleteButton && (
             <Button
               onClick={handleDeleteMultiple}
               className="bg-red-600 text-white hover:bg-rose-600"
             >
               Delete Selected
             </Button>
-          ) : (
-            ""
           )}
           <Table
             rowSelection={rowSelection}
             columns={columns}
             dataSource={data}
           />
-          {cartItems.length ? (
+          {cartItems.length > 0 && (
             <div className="flex justify-end mt-6">
               <Button
                 disabled={selectedCartItems.length === 0}
@@ -171,8 +275,6 @@ const Cart = () => {
                 Checkout
               </Button>
             </div>
-          ) : (
-            ""
           )}
         </div>
       )}

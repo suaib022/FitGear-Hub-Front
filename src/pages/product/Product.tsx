@@ -20,7 +20,6 @@ const Product = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [range, setRange] = useState([0, 50000]);
   const [inStock, setInStock] = useState();
-  // const [checkedList, setCheckedList] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [sortByPrice, setSortByPrice] = useState("");
   const [page, setPage] = useState(1);

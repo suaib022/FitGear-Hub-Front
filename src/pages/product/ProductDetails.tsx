@@ -2,15 +2,15 @@
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
 import { RxCrossCircled } from "react-icons/rx";
 
-import { FaCheckCircle, FaFontAwesome } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/features/cart/cartSlice";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
-  // Handle the case where id might be undefined
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
   }
@@ -40,6 +40,9 @@ const ProductDetails = () => {
     };
 
     dispatch(addToCart(cartData));
+    toast.success("Item added to cart successfully !", {
+      duration: 1500,
+    });
   };
 
   return (
