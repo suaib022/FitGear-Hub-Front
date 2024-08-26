@@ -4,6 +4,17 @@ import img3 from "../../assets/Team Members/3.jpeg";
 import img4 from "../../assets/Team Members/4.jpeg";
 import img5 from "../../assets/Team Members/5.jpeg";
 
+import reviewImg1 from "../../assets/Clients/1.jpg";
+import reviewImg2 from "../../assets/Clients/2.jpg";
+import reviewImg3 from "../../assets/Clients/3.jpg";
+import reviewImg4 from "../../assets/Clients/4.jpg";
+import reviewImg5 from "../../assets/Clients/5.jpg";
+import reviewImg6 from "../../assets/Clients/6.jpg";
+import reviewImg7 from "../../assets/Clients/7.jpg";
+import reviewImg8 from "../../assets/Clients/8.jpg";
+import reviewImg9 from "../../assets/Clients/9.jpg";
+import reviewImg10 from "../../assets/Clients/10.jpg";
+
 export const description1 = `John Doe is the visionary behind FitGear Hub. With a
                     background in sports science and over 15 years of experience
                     in the fitness industry, John has dedicated his life to
@@ -84,5 +95,78 @@ export const teamMembers = [
     position: "Customer Relations Manager",
     image: img5,
     description: description5,
+  },
+];
+
+export const customerReviews = [
+  {
+    name: "Alexander Peterson",
+    review:
+      "FitGear Hub has revolutionized my home gym experience. The equipment quality is unmatched, and their customer service is top-notch!",
+    rating: 5,
+    image: reviewImg1,
+  },
+  {
+    name: "Maria Lopez",
+    review:
+      "I love the variety of products available at FitGear Hub. They have everything I need to stay fit and healthy. Highly recommended!",
+    rating: 4,
+    image: reviewImg2,
+  },
+  {
+    name: "James Smith",
+    review:
+      "The shipping was fast, and the equipment arrived in perfect condition. The setup was straightforward, and the performance is excellent.",
+    rating: 5,
+    image: reviewImg3,
+  },
+  {
+    name: "Olivia Johnson",
+    review:
+      "Great quality equipment at competitive prices. FitGear Hub's customer support was also very responsive to my queries.",
+    rating: 4,
+    image: reviewImg4,
+  },
+  {
+    name: "William Brown",
+    review:
+      "I’ve purchased several items from FitGear Hub, and I’m consistently impressed with their products and service. Keep up the great work!",
+    rating: 5,
+    image: reviewImg5,
+  },
+  {
+    name: "Sophia Davis",
+    review:
+      "The range of fitness equipment is impressive, and the detailed product descriptions helped me make informed choices. Very satisfied!",
+    rating: 4,
+    image: reviewImg6,
+  },
+  {
+    name: "Liam Wilson",
+    review:
+      "FitGear Hub offers top-notch gym equipment. My new treadmill is fantastic, and the buying experience was smooth and hassle-free.",
+    rating: 5,
+    image: reviewImg7,
+  },
+  {
+    name: "Emma Martinez",
+    review:
+      "I had a minor issue with my order, but FitGear Hub’s customer service handled it swiftly and professionally. Overall, a great experience.",
+    rating: 4,
+    image: reviewImg8,
+  },
+  {
+    name: "Noah Anderson",
+    review:
+      "The quality of the equipment is outstanding, and the delivery was on time. I’ll definitely be a repeat customer.",
+    rating: 5,
+    image: reviewImg9,
+  },
+  {
+    name: "Ava Thomas",
+    review:
+      "I appreciate the detailed information provided about each product. FitGear Hub makes it easy to find exactly what you need.",
+    rating: 4,
+    image: reviewImg10,
   },
 ];

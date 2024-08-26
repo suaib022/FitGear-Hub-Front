@@ -10,6 +10,7 @@ import {
   teamMembers,
 } from "./aboutUsConstants";
 import Testimonials from "./testomonials";
+import ContactUs from "./contactUs";
 
 const AboutUs = () => {
   const descriptions = [
@@ -63,8 +64,10 @@ const AboutUs = () => {
                   alt={`Team member ${index + 1}`}
                 />
                 <div className="">
-                  <h3 className="text-lg font-bold">{member.name}</h3>
-                  <p className="text-blue-500 mb-2">{member.position}</p>
+                  <h3 className="text-lg font-extrabold">{member.name}</h3>
+                  <p className="text-rose-500 mb-2 font-semibold">
+                    {member.position}
+                  </p>
                   <p className="italic">
                     {truncateDescription(member.description, index)}
                     {member.description.length > 100 && (
@@ -83,19 +86,22 @@ const AboutUs = () => {
         </div>
       </section>
 
-      <section className="w-full">
+      <div className="w-full ">
         <h2 className="text-3xl font-semibold mt-12">What Our Customers Say</h2>
-        <Testimonials />
-      </section>
+        <div className="">
+          <Testimonials />
+        </div>
+      </div>
 
       <section className="contact-information">
-        <h2>Contact Us</h2>
-        <p>Email: support@fitgearhub.com</p>
+        <h2 className="text-3xl mt-8 font-semibold">Contact Us</h2>
+        {/* <p className="font-semibold">Email: support@fitgearhub.com</p>
         <p>Phone: +123-456-7890</p>
         <p>Address: 123 Fitness St, Workout City, Fitland</p>
         <p>
           We'd love to hear from you! Reach out with any questions or feedback.
-        </p>
+        </p> */}
+        <ContactUs />
       </section>
     </div>
   );

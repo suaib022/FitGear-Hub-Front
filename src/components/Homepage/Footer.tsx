@@ -13,6 +13,9 @@ const Footer = () => {
             <h3 className="text-xl font-semibold">Contact Us</h3>
             <p className="text-white">Email: support@fitgearhub.com</p>
             <p className="text-white">Phone: +1 (800) 123-4567</p>
+            <p className="text-white">
+              Address: 123 Fitness St, Workout City, Fitland
+            </p>
           </div>
           <div className="w-full md:w-1/3">
             <h3 className="text-xl font-semibold">Follow Us</h3>
