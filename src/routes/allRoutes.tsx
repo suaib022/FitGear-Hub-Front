@@ -1,5 +1,4 @@
 import CreateProduct from "@/pages/admin/CreateProduct";
-import AdminDashboard from "../pages/admin/AdminDashboard";
 import ManageProducts from "@/pages/admin/ManageProducts";
 import Product from "@/pages/product/Product";
 import AboutUs from "@/pages/about/aboutUs";
@@ -9,8 +8,7 @@ import UpdateProduct from "@/pages/admin/UpdateProduct";
 import Home from "@/pages/Homepage/Home";
 import Checkout from "@/components/Checkout/Checkout";
 
-export const adminPaths = [
-  { name: "Dashboard", path: "dashboard", element: <AdminDashboard /> },
+export const allPaths = [
   { name: "Products", path: "products", element: <Product /> },
   {
     name: "Product Management",

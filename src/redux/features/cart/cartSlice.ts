@@ -27,6 +27,8 @@ const cartSlice = createSlice({
     deleteCartItems: (state, action) => {
       const { selectedCartItems } = action.payload;
 
+      console.log({ selectedCartItems });
+
       selectedCartItems.forEach((selectedItem: TCart) => {
         const matchedIndex = state.findIndex(
           (item) => item._id === selectedItem._id
@@ -37,7 +39,7 @@ const cartSlice = createSlice({
       });
     },
     updateCartQuantity: (state, action) => {
-      const { updatedQuantity, _id } = action.payload;
+      const { _id, updatedQuantity, updatedQuantityInStock } = action.payload;
 
       const itemIndex = state.findIndex((item) => item._id === _id);
 
@@ -45,6 +47,7 @@ const cartSlice = createSlice({
         state[itemIndex] = {
           ...state[itemIndex],
           quantity: updatedQuantity,
+          quantityInStock: updatedQuantityInStock,
         };
       }
     },

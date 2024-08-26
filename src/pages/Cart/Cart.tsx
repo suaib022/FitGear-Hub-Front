@@ -146,7 +146,6 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (value: number, key: React.Key) => {
-    // Find the specific item by its key
     const updatedItem = data.find((item) => item.key === key);
 
     if (updatedItem) {
@@ -156,6 +155,7 @@ const Cart = () => {
       const updatedItemWithNewQuantity = {
         ...updatedItem,
         quantity: newQuantity,
+        quantityInStock: updatedItem.quantityInStock,
       };
 
       console.log({ updatedItemWithNewQuantity, value });
@@ -163,6 +163,7 @@ const Cart = () => {
       dispatch(
         updateCartQuantity({
           updatedQuantity: newQuantity,
+          updatedQuantityInStock: updatedItem.quantityInStock,
           _id: updatedItem._id,
         })
       );

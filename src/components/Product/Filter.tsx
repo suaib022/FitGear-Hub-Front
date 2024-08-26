@@ -7,7 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useGetallProductsQuery } from "@/redux/features/product/productApi";
+
 import { Button } from "../ui/button";
 
 const CheckboxGroup = Checkbox.Group;
@@ -35,6 +35,9 @@ const Filter = ({
   setCheckedList,
   allProducts,
   sortByPrice,
+  setSortByPrice,
+  isInitialized,
+  setIsInitialized,
 }) => {
   const [accordionValue, setAccordionValue] = useState("item-1");
   const [accordion2Value, setAccordion2Value] = useState("item-2");
@@ -45,7 +48,26 @@ const Filter = ({
   const indeterminate =
     checkedList.length > 0 && checkedList.length < categories.length;
 
-  const { data: products } = useGetallProductsQuery(undefined);
+  const getMaxPrice = (arr) => {
+    let maxPrice = arr[0].price;
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i].price > maxPrice) {
+        maxPrice = arr[i].price;
+      }
+    }
+
+    return maxPrice;
+  };
+
+  useEffect(() => {
+    if (allProducts?.data && !isInitialized) {
+      const highestPrice = getMaxPrice(allProducts?.data);
+      setHighest(highestPrice);
+      setIsInitialized(true);
+      setRange([range[0], highestPrice]);
+    }
+  }, [allProducts, isInitialized, range, setRange, setIsInitialized]);
 
   const onSliderChange = (newRange) => {
     setRange(newRange);
@@ -84,13 +106,6 @@ const Filter = ({
   };
 
   useEffect(() => {
-    if (allProducts?.data) {
-      const highestPrice = getMaxPrice(allProducts.data);
-      setRange([range[0], highestPrice]);
-    }
-  }, [allProducts]);
-
-  useEffect(() => {
     if (
       checkedList.length > 0 ||
       inStock ||
@@ -106,24 +121,12 @@ const Filter = ({
 
   // console.log({ disabledButton });
 
-  const getMaxPrice = (arr) => {
-    let maxPrice = arr[0].price;
-
-    for (let i = 1; i < arr.length; i++) {
-      if (arr[i].price > maxPrice) {
-        maxPrice = arr[i].price;
-      }
-    }
-
-    return maxPrice;
+  const handleClearFilter = () => {
+    setCheckedList([]);
+    setInStock();
+    setRange([0, highest]);
+    setSortByPrice("default");
   };
-
-  useEffect(() => {
-    if (allProducts?.data) {
-      const highestPrice = getMaxPrice(allProducts?.data);
-      setHighest(highestPrice);
-    }
-  }, [allProducts]);
 
   // console.log({ highest });
 
@@ -131,7 +134,9 @@ const Filter = ({
     <div className="bg-gray-200 shadow-xl rounded-md px-8 py-4">
       <div className="justify-end flex ">
         {disabledButton ? (
-          <Button className="bg-red-600">Clear Filter</Button>
+          <Button onClick={handleClearFilter} className="bg-red-600">
+            Clear Filter
+          </Button>
         ) : (
           ""
         )}
@@ -145,8 +150,16 @@ const Filter = ({
         onChange={onSliderChange}
       />
       <div className="flex justify-between mt-4">
-        <Input className="w-1/4" value={range[0]} onChange={onLowestChange} />
-        <Input className="w-1/4" value={range[1]} onChange={onHighestChange} />
+        <Input
+          className="w-1/3 text-center"
+          value={range[0]}
+          onChange={onLowestChange}
+        />
+        <Input
+          className="w-1/3 text-center"
+          value={range[1]}
+          onChange={onHighestChange}
+        />
       </div>
 
       <Accordion

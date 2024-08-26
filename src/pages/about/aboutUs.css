@@ -1,56 +1,42 @@
-.about-us-container {
-  margin: 0 auto;
-  font-family: "Lato", sans-serif;
-}
-
-.company-overview,
-.team-introduction,
-.customer-testimonials,
-.contact-information {
-  margin-bottom: 40px;
+.about-us {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  animation: fadeIn 1s ease-in-out;
 }
 
 h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  color: #222;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p {
+  color: #555;
+  line-height: 1.6;
 }
 
 .team-member {
   margin-bottom: 20px;
 }
 
-.team-member h3 {
-  font-size: 1.5rem;
-  color: #555;
-  margin-bottom: 5px;
+blockquote {
+  font-style: italic;
+  color: #666;
+  border-left: 4px solid #ccc;
+  padding-left: 10px;
+  margin: 20px 0;
 }
 
-.team-member p {
+.contact-information p {
   margin: 5px 0;
 }
 
-.customer-testimonials blockquote {
-  font-style: italic;
-  margin: 20px 0;
-  padding-left: 15px;
-  border-left: 3px solid #ddd;
-}
-
-.contact-information ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.contact-information ul li {
-  margin-bottom: 5px;
-}
-
-.contact-information ul li a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.contact-information ul li a:hover {
-  text-decoration: underline;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

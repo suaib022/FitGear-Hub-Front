@@ -7,9 +7,17 @@ type TInputProps = {
   label?: string;
   value?: string | number;
   className?: string;
+  required?: boolean;
 };
 
-const FormInput = ({ type, name, label, value, className }: TInputProps) => {
+const FormInput = ({
+  type,
+  name,
+  label,
+  value,
+  className,
+  required,
+}: TInputProps) => {
   return (
     <div>
       {label ? label : null}
@@ -17,14 +25,20 @@ const FormInput = ({ type, name, label, value, className }: TInputProps) => {
         name={name}
         render={({ field }) =>
           type === "textarea" ? (
-            <Input.TextArea className={className} id={name} {...field} />
+            <Input.TextArea
+              required={required}
+              className={className}
+              id={name}
+              {...field}
+            />
           ) : (
             <Input
               className={className}
               {...field}
               type={type}
-              defaultValue={value}
+              value={value}
               id={name}
+              required={required}
             ></Input>
           )
         }

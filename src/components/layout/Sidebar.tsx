@@ -1,12 +1,12 @@
 import { Layout, Menu } from "antd";
 import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
-import { adminPaths } from "../../routes/Admin.routes";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { allPaths } from "@/routes/allRoutes";
 const { Sider } = Layout;
 
 const Sidebar = () => {
-  const sidebarItems = sidebarItemsGenerator(adminPaths);
+  const sidebarItems = sidebarItemsGenerator(allPaths);
 
   console.log("object", sidebarItems);
 

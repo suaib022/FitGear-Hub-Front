@@ -15,6 +15,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import img from "../../assets/Result/no-data-found.png";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  deleteCartItems,
+  getAllCartItems,
+} from "@/redux/features/cart/cartSlice";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -33,6 +38,7 @@ const ManageProduct = () => {
     useState(false);
   const [selectedItems, setSelectedItems] = useState<DataType[]>([]);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   let clickedOne: any;
 
   // console.log({ showMultipleDeleteButton });
@@ -48,6 +54,7 @@ const ManageProduct = () => {
     isError,
     isLoading,
   } = useGetallProductsQuery({ limit: 5000 });
+  const cartItems = useAppSelector(getAllCartItems);
 
   if (isLoading) {
     return (
@@ -90,11 +97,21 @@ const ManageProduct = () => {
   const handleDeleteOne = async (key: React.Key) => {
     const toastId = toast.loading("Deleting...");
     clickedOne = data.find((item) => item.key === key);
+    const toBeDeletedCartItem = cartItems.find(
+      (item) => item._id === clickedOne!._id
+    );
+
+    if (toBeDeletedCartItem) {
+      dispatch(deleteCartItems({ selectedCartItems: [toBeDeletedCartItem] }));
+      toast.success("Also Deleted from cart !", { duration: 3000 });
+    }
 
     const res = await deleteSingleProduct(clickedOne!._id);
 
     if (res.data.success) {
       toast.success("Deleted successfully !", { id: toastId, duration: 2000 });
+      setSelectedItems([]);
+      setSelectedRowKeys([]);
     }
     if (res.error) {
       toast.error("Something went wrong !", { id: toastId, duration: 2000 });
@@ -104,10 +121,24 @@ const ManageProduct = () => {
 
   const handleMultipleDelete = async () => {
     const ids: string[] = selectedItems.map((item) => item._id);
+    let toBeDeletedCartItems = [];
+
+    for (let i = 0; i < ids.length; i++) {
+      const doesExistInCart = cartItems.find((item) => item._id === ids[i]);
+      if (doesExistInCart) {
+        toBeDeletedCartItems.push(doesExistInCart);
+      }
+    }
+
+    console.log({ toBeDeletedCartItems });
+    dispatch(deleteCartItems({ selectedCartItems: toBeDeletedCartItems }));
     const res = await deleteMultipleProducts(ids);
 
     if (res.data.data.deletedCount) {
       toast.success(`${res.data.message}`, { duration: 2000 });
+      setSelectedItems([]);
+      setSelectedRowKeys([]);
+      setShowMultipleDeleteButton(false);
     }
   };
 

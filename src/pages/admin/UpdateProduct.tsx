@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import {
   useGetSingleProductQuery,
   useUpdateSingleProductMutation,
@@ -5,10 +6,16 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Select, Upload, UploadProps } from "antd";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import img from "../../assets/Form/2.png";
 import { toast } from "sonner";
 import TextArea from "antd/es/input/TextArea";
+import { useAppSelector } from "@/redux/hooks";
+import {
+  getAllCartItems,
+  updateCartQuantity,
+} from "@/redux/features/cart/cartSlice";
+import { useDispatch } from "react-redux";
 
 type TUpdatedData = {
   name?: string;
@@ -28,12 +35,15 @@ const UpdateProduct = () => {
   const [Category, setCategory] = useState("");
   const [disableUploadButton, setDisableUploadButton] = useState(false);
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
   }
 
   const { data: productData, isLoading } = useGetSingleProductQuery(productId);
+  const cartItems = useAppSelector(getAllCartItems);
   const [updateSingleProduct] = useUpdateSingleProductMutation();
 
   useEffect(() => {
@@ -78,11 +88,26 @@ const UpdateProduct = () => {
         productId,
         updatedData,
       });
+      const existingCartItem = cartItems.find((item) => item._id === productId);
+      if (
+        existingCartItem &&
+        existingCartItem.quantity > Number(values.quantity)
+      ) {
+        dispatch(
+          updateCartQuantity({
+            updatedQuantity: Number(values.quantity),
+            updatedQuantityInStock: Number(values.quantity),
+            _id: productId,
+          })
+        );
+      }
+      setDisableUploadButton(false);
 
       toast.success(res.data.message, {
         id: toastId,
         duration: 2000,
       });
+      navigate("/manage-products");
     } catch (err) {
       toast.error("Something went wrong", { id: toastId, duration: 2000 });
     }

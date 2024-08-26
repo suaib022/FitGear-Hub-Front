@@ -22,10 +22,11 @@ const Product = () => {
   const [inStock, setInStock] = useState();
   const [open, setOpen] = useState(false);
   const [sortByPrice, setSortByPrice] = useState("");
+  const [sortByPriceValue, setSortByPriceValue] = useState("default");
+  const [isInitialized, setIsInitialized] = useState(false);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [numberOfProducts, setNumberOfProducts] = useState(500);
-
   const [limitOptions, setLimitOptions] = useState([
     { value: 10, label: "10" },
     { value: 20, label: "20" },
@@ -57,7 +58,7 @@ const Product = () => {
   });
 
   const {
-    data: productsWithOutLimit,
+    data: productsWithoutLimit,
     isLoading: isProductsWithOutLimitLoading,
     isError: isProductsWithOutLimitError,
   } = useGetallProductsQuery({
@@ -71,13 +72,21 @@ const Product = () => {
   });
 
   useEffect(() => {
-    if (productsWithOutLimit?.data) {
-      setNumberOfProducts(productsWithOutLimit.data.length);
+    if (productsWithoutLimit?.data) {
+      setNumberOfProducts(productsWithoutLimit.data.length);
     }
-  }, [productsWithOutLimit]);
+  }, [productsWithoutLimit]);
+
+  useEffect(() => {
+    if (sortByPrice === "default") {
+      setSortByPrice("");
+      setSortByPriceValue("default");
+    }
+  }, [sortByPrice]);
 
   const handleChange = (value: string) => {
     setSortByPrice(value);
+    setSortByPriceValue(value);
   };
 
   const showDrawer = () => {
@@ -135,14 +144,17 @@ const Product = () => {
   };
 
   // console.log({ products, searchTerm });
-  console.log({ checkedList });
-  console.log({ category });
+  // console.log({ checkedList });
+  // console.log({ category });
 
   return (
     <div>
       <div className="lg:flex lg:gap-12">
         <div className="lg:w-1/4 hidden lg:block">
           <Filter
+            isInitialized={isInitialized}
+            setIsInitialized={setIsInitialized}
+            setSortByPrice={setSortByPrice}
             setCategory={setCategory}
             allProducts={allProducts}
             sortByPrice={sortByPrice}
@@ -181,6 +193,8 @@ const Product = () => {
             </div>
             <div className="lg:hidden  flex sm:justify-start md:justify-center justify-center items-center">
               <FilterDrawer
+                isInitialized={isInitialized}
+                setIsInitialized={setIsInitialized}
                 setCategory={setCategory}
                 allProducts={allProducts}
                 sortByPrice={sortByPrice}
@@ -201,10 +215,10 @@ const Product = () => {
               <Space wrap>
                 <Select
                   onChange={handleChange}
-                  defaultValue="default"
+                  value={sortByPriceValue}
                   style={{ width: 120 }}
                   options={[
-                    { value: "", label: "Default" },
+                    { value: "default", label: "Default" },
                     { value: "price", label: "Price (Low > High)" },
                     { value: "-price", label: "Price (High > Low)" },
                   ]}

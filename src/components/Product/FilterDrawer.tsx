@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Drawer, Input, Checkbox, Divider } from "antd";
 import { Slider } from "antd";
@@ -8,7 +9,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "../ui/button";
-import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -39,15 +39,63 @@ const FilterDrawer = ({
   allProducts,
   setCategory,
   setSortByPrice,
+  isInitialized,
+  setIsInitialized,
 }) => {
   const [accordionValue, setAccordionValue] = useState("item-1");
   const [accordion2Value, setAccordion2Value] = useState("item-2");
-  const [disabledButton, setDisabledButton] = useState(false);
+  const [disabledButton, setDisabledButton] = useState(true);
   const [highest, setHighest] = useState(range[1]);
 
   const checkAll = categories.length === checkedList.length;
   const indeterminate =
     checkedList.length > 0 && checkedList.length < categories.length;
+
+  const getMaxPrice = (arr) => {
+    let maxPrice = arr[0].price;
+
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i].price > maxPrice) {
+        maxPrice = arr[i].price;
+      }
+    }
+
+    return maxPrice;
+  };
+
+  useEffect(() => {
+    if (allProducts?.data && !isInitialized) {
+      const highestPrice = getMaxPrice(allProducts?.data);
+      setHighest(highestPrice);
+      setRange([range[0], highestPrice]);
+      setIsInitialized(true);
+    }
+  }, [
+    allProducts,
+    range,
+    setRange,
+    isInitialized,
+    getMaxPrice,
+    setHighest,
+    setIsInitialized,
+  ]);
+
+  useEffect(() => {
+    if (
+      checkedList.length > 0 ||
+      inStock ||
+      range[0] !== 0 ||
+      range[1] !== highest ||
+      sortByPrice !== ""
+    ) {
+      console.log(checkedList.length, inStock, range, sortByPrice, highest);
+      console.log("1");
+      setDisabledButton(false);
+    } else {
+      console.log("2");
+      setDisabledButton(true);
+    }
+  }, [checkedList, inStock, range, highest, sortByPrice]);
 
   const onSliderChange = (newRange) => {
     setRange(newRange);
@@ -71,13 +119,13 @@ const FilterDrawer = ({
     setCheckedList(e.target.checked ? categories : []);
     setCategory(e.target.checked ? categories : []);
     if (e.target.checked) {
-      setDisabledButton(true);
+      setDisabledButton(false);
     }
   };
 
   const onChange2 = (list) => {
     if (list.length > 0) {
-      setDisabledButton(true);
+      setDisabledButton(false);
     }
     setCheckedList(list);
     setCategory(list);
@@ -93,56 +141,23 @@ const FilterDrawer = ({
 
   // console.log({ inStock });
 
-  const getMaxPrice = (arr) => {
-    let maxPrice = arr[0].price;
-
-    for (let i = 1; i < arr.length; i++) {
-      if (arr[i].price > maxPrice) {
-        maxPrice = arr[i].price;
-      }
-    }
-
-    return maxPrice;
-  };
-
-  useEffect(() => {
-    if (allProducts?.data) {
-      const highestPrice = getMaxPrice(allProducts?.data);
-      setHighest(highestPrice);
-      setRange([range[0], highestPrice]);
-    }
-  }, [allProducts]);
-
   // console.log({ highest });
-
-  useEffect(() => {
-    if (
-      checkedList.length > 0 ||
-      inStock ||
-      range[0] !== 0 ||
-      range[1] !== highest ||
-      sortByPrice !== ""
-    ) {
-      setDisabledButton(true);
-    } else {
-      setDisabledButton(false);
-    }
-  }, [checkedList, inStock, range, highest, sortByPrice]);
 
   const handleClearFilter = () => {
     setCheckedList([]);
     setInStock();
-    setRange(0, highest);
-    setSortByPrice("");
+    setRange([0, highest]);
+    setSortByPrice("default");
   };
 
-  // console.log({ checkedList, inStock });
-  // console.log({ disabledButton });
   console.log(range);
 
   return (
     <>
-      <Button className="sm:w-2/4 w-2/5" onClick={showDrawer}>
+      <Button
+        className="sm:w-2/4 w-2/5 bg-rose-500 hover:bg-rose-600"
+        onClick={showDrawer}
+      >
         Filter
       </Button>
       <Drawer
@@ -152,8 +167,10 @@ const FilterDrawer = ({
         open={open}
       >
         <div className="justify-end flex ">
-          {disabledButton ? (
-            <Button className="bg-red-600">Clear Filter</Button>
+          {!disabledButton ? (
+            <Button onClick={handleClearFilter} className="bg-red-600">
+              Clear Filter
+            </Button>
           ) : (
             ""
           )}
@@ -163,13 +180,17 @@ const FilterDrawer = ({
           range
           min={0}
           max={highest}
-          value={range}
+          value={[range[0], range[1]]}
           onChange={onSliderChange}
         />
         <div className="flex justify-between mt-4">
-          <Input className="w-1/4" value={range[0]} onChange={onLowestChange} />
           <Input
-            className="w-1/4"
+            className="w-1/4 text-center"
+            value={range[0]}
+            onChange={onLowestChange}
+          />
+          <Input
+            className="w-1/4 text-center"
             value={range[1]}
             onChange={onHighestChange}
           />

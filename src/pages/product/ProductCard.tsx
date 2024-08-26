@@ -73,7 +73,7 @@ const ProductCard = ({ product }) => {
     setDisabledCartButtons,
   ]);
 
-  console.log({ allProducts, allCartItems, disabledCartButtons });
+  // console.log({ allProducts, allCartItems, disabledCartButtons });
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
@@ -160,14 +160,14 @@ const ProductCard = ({ product }) => {
           <div className="flex justify-between ">
             <Button
               onClick={() => navigate(`/products/${product?._id}`)}
-              className="bg-blue-500 hover:bg-rose-600"
+              className="bg-blue-500 hover:bg-blue-600"
             >
               Details
             </Button>
             <Button
               disabled={!!isDisabled}
               onClick={handleAddToCart}
-              className="hover:bg-rose-600 hover:text-white max-w-24 border-rose-700"
+              className="text-white hover:bg-rose-600 bg-rose-500  max-w-24 border-rose-700 hover:text-white"
               variant="outline"
             >
               Add To Cart

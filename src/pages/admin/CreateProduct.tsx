@@ -9,6 +9,7 @@ import type { UploadProps } from "antd";
 import { Select } from "antd";
 import { useState } from "react";
 import img from "../../assets/Form/1.png";
+import { useNavigate } from "react-router-dom";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -16,16 +17,26 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 const CreateProduct = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [category, setCategory] = useState("");
+  const [disableUploadButton, setDisableUploadButton] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+
+  const navigate = useNavigate();
 
   const [createProduct, { isLoading }] = useCreateProductMutation();
 
   const onCategorySelect = (value, label) => {
     setCategory(label);
+    setCategoryError(false);
   };
 
   console.log({ category });
 
   const onSubmit = async (data: FieldValues) => {
+    if (!category) {
+      setCategoryError(true);
+      return;
+    }
+
     let toastId;
     try {
       toastId = toast.loading("Creating product...");
@@ -47,8 +58,11 @@ const CreateProduct = () => {
         duration: 2000,
       });
       setImageUrl("");
+      setDisableUploadButton(false);
+      navigate("/manage-products");
     } catch (err) {
       toast.error("Something went wrong", { id: toastId, duration: 2000 });
+
       console.log({ err });
     }
   };
@@ -61,6 +75,7 @@ const CreateProduct = () => {
       if (file.status === "done") {
         const uploadedImageUrl = file.response.data.url;
         setImageUrl(uploadedImageUrl);
+        setDisableUploadButton(true);
         toast.success("Image uploaded successfully!");
       } else if (file.status === "error") {
         toast.error("Image upload failed");
@@ -71,8 +86,11 @@ const CreateProduct = () => {
     },
     onRemove(file) {
       setImageUrl("");
+      setDisableUploadButton(false);
     },
   };
+
+  console.log({ imageUrl });
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -86,15 +104,27 @@ const CreateProduct = () => {
         <Row className="" justify="center" align="middle" style={{}}>
           <UseForm onSubmit={onSubmit}>
             <div className="space-y-2 font-semibold">
-              <FormInput type="text" name="name" label="Name :"></FormInput>
-              <FormInput type="number" name="price" label="Price :"></FormInput>
               <FormInput
+                required={true}
+                type="text"
+                name="name"
+                label="Name :"
+              ></FormInput>
+              <FormInput
+                required={true}
+                type="number"
+                name="price"
+                label="Price :"
+              ></FormInput>
+              <FormInput
+                required={true}
                 className={`text-wrap`}
                 type="textarea"
                 name="description"
                 label="Description :"
               ></FormInput>
               <FormInput
+                required={true}
                 value={imageUrl}
                 className={`mb-1`}
                 type="text"
@@ -102,14 +132,14 @@ const CreateProduct = () => {
                 label="Image Url :"
               ></FormInput>
               <Upload className="" {...uploadProps}>
-                <Button icon={<UploadOutlined />}>Upload</Button>
+                <Button
+                  disabled={disableUploadButton}
+                  icon={<UploadOutlined />}
+                >
+                  Upload
+                </Button>
               </Upload>
-              {/* <FormInput
-                type="text"
-                name="category"
-                label="Category :"
-              ></FormInput> */}
-              <h2 className="">Category :</h2>
+              <h2 className="text-sm">Category :</h2>
               <Select
                 onSelect={onCategorySelect}
                 showSearch
@@ -132,8 +162,12 @@ const CreateProduct = () => {
                   { value: "10", label: "Gym Packages" },
                 ]}
               />
+              {categoryError && (
+                <div className="text-red-500">Please select a category</div>
+              )}
 
               <FormInput
+                required={true}
                 type="number"
                 name="quantity"
                 label="Quantity :"
