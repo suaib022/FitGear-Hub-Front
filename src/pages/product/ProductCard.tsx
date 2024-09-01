@@ -10,12 +10,15 @@ import {
 import { addToCart, getAllCartItems } from "@/redux/features/cart/cartSlice";
 import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Flex, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { toast } from "sonner";
+import errorImg from "../../assets/Result/error-404.png";
 
-const MAX_DESCRIPTION_LENGTH = 70;
-const MAX_NAME_LENGTH = 20;
+const MAX_DESCRIPTION_LENGTH = 75;
+const MAX_NAME_LENGTH = 30;
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -73,8 +76,6 @@ const ProductCard = ({ product }) => {
     setDisabledCartButtons,
   ]);
 
-  // console.log({ allProducts, allCartItems, disabledCartButtons });
-
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
@@ -99,8 +100,7 @@ const ProductCard = ({ product }) => {
       name,
       price,
       quantity: 1,
-      image:
-        "https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png",
+      image: image,
       quantityInStock: quantity,
     };
 
@@ -113,11 +113,18 @@ const ProductCard = ({ product }) => {
   const isDisabled = disabledCartButtons.find((button) => button[_id] === true);
 
   if (isAllProductsLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Flex align="center" gap="middle">
+        <Spin
+          className="fixed inset-0 flex items-center justify-center"
+          indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+        />
+      </Flex>
+    );
   }
 
   if (isAllProductsError) {
-    return <div>Something went wrong!</div>;
+    return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
   return (
@@ -134,18 +141,15 @@ const ProductCard = ({ product }) => {
             </span>
           )}
         </CardTitle>
-        <h3>${price}</h3>
+        <h3 className="text-orange-600 font-semibold">${price}</h3>
       </CardHeader>
       <CardContent>
-        <img
-          src="https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png"
-          alt=""
-        />
+        <img className="h-[200px] mx-auto" src={image} alt="" />
       </CardContent>
       <CardFooter className="  ">
         <div className="space-y-4  flex flex-col mx-auto gap-4">
           <div className="">
-            <CardDescription className="text-black">
+            <CardDescription className="text-black italic">
               {truncateDescription}
               {description.length > MAX_DESCRIPTION_LENGTH && (
                 <span
@@ -157,17 +161,17 @@ const ProductCard = ({ product }) => {
               )}
             </CardDescription>
           </div>
-          <div className="flex justify-between ">
+          <div className=" flex justify-between w-full ">
             <Button
               onClick={() => navigate(`/products/${product?._id}`)}
-              className="bg-blue-500 hover:bg-blue-600"
+              className="bg-blue-500 hover:bg-blue-600 h-9 w-2/5"
             >
               Details
             </Button>
             <Button
               disabled={!!isDisabled}
               onClick={handleAddToCart}
-              className="text-white hover:bg-rose-600 bg-rose-500  max-w-24 border-rose-700 hover:text-white"
+              className="text-white hover:bg-rose-600 bg-rose-500  max-w-24 border-rose-700 hover:text-white h-9 w-3/5"
               variant="outline"
             >
               Add To Cart

@@ -13,6 +13,7 @@ import type { PaginationProps } from "antd";
 import { Pagination } from "antd";
 import { useOutletContext } from "react-router-dom";
 import img from "../../assets/Result/no-data-found.png";
+import errorImg from "../../assets/Result/error-404.png";
 
 const Product = () => {
   const { category, setCategory, checkedList, setCheckedList } =
@@ -33,8 +34,6 @@ const Product = () => {
     { value: 50, label: "50" },
     { value: 100, label: "100" },
   ]);
-
-  console.log({ checkedList });
 
   const {
     data: allProducts,
@@ -128,11 +127,15 @@ const Product = () => {
   }
 
   if (isError || isAllProductsError || isProductsWithOutLimitError) {
-    return <div>Error loading products</div>;
+    return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
   if (!products.data) {
-    return <div>No products available</div>;
+    return (
+      <div>
+        <img src={img} alt="" />
+      </div>
+    );
   }
 
   type SearchProps = GetProps<typeof Input.Search>;
@@ -142,10 +145,6 @@ const Product = () => {
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
     setSearchTerm(value);
   };
-
-  // console.log({ products, searchTerm });
-  // console.log({ checkedList });
-  // console.log({ category });
 
   return (
     <div>

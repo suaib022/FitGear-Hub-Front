@@ -26,7 +26,7 @@ const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
 
   const dispatch = useAppDispatch();
   const doesUserExists = useAppSelector(getUserDetails);
-  console.log({ doesUserExists });
+
   useEffect(() => {
     const isEmpty = !doesUserExists.name;
     if (isEmpty) {
@@ -60,18 +60,12 @@ const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
     dispatch(addUserDetails({ userDetails }));
     setEmptyUser(false);
     setUserDetailsMissing(false);
-    console.log("Success:", values);
   };
-
-  // console.log({ userDetails });
-  // const isEmpty = Object.keys(userDetails).length === 0;
-  console.log({ emptyUser });
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
   ) => {
     setUserDetailsMissing(true);
-    console.log("Failed:", errorInfo);
   };
 
   return (

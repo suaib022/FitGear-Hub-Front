@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useGetSingleProductQuery } from "@/redux/features/product/productApi";
 import { RxCrossCircled } from "react-icons/rx";
-
 import { FaCheckCircle } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -9,6 +8,9 @@ import { addToCart, getAllCartItems } from "@/redux/features/cart/cartSlice";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import errorImg from "../../assets/Result/error-404.png";
+import { Flex, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const ProductDetails = () => {
   const [disabledAddToCartButton, setDisabledAddToCartButton] = useState(false);
@@ -16,17 +18,41 @@ const ProductDetails = () => {
   const allCartItems = useAppSelector(getAllCartItems);
   const { productId } = useParams<{ productId: string }>();
 
+  const doesExistInCart = allCartItems.find((item) => item._id === productId);
+
+  useEffect(() => {
+    if (
+      doesExistInCart &&
+      doesExistInCart.quantity >= doesExistInCart.quantityInStock
+    ) {
+      setDisabledAddToCartButton(true);
+    } else {
+      setDisabledAddToCartButton(false);
+    }
+  }, [doesExistInCart]);
+
   if (productId === undefined) {
     return <div>Error: ID is missing</div>;
   }
 
-  const { data } = useGetSingleProductQuery(productId);
+  const { data, isLoading, isError } = useGetSingleProductQuery(productId);
 
-  if (!data) {
-    return <h2>This feature is unavailable at this moment !</h2>;
+  if (isLoading) {
+    return (
+      <Flex align="center" gap="middle">
+        <Spin
+          className="fixed inset-0 flex items-center justify-center"
+          indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+        />
+      </Flex>
+    );
   }
 
-  const { _id, name, price, description, category, quantity, inStock } =
+  if (isError) {
+    return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
+  }
+
+  const { _id, name, price, description, category, quantity, inStock, image } =
     data.data;
 
   const handleAddToCart = () => {
@@ -35,21 +61,9 @@ const ProductDetails = () => {
       name,
       price,
       quantity: 1,
-      image:
-        "https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png",
+      image: image,
       quantityInStock: quantity,
     };
-
-    const doesExistInCart = allCartItems.find((item) => item._id === productId);
-
-    if (
-      doesExistInCart &&
-      doesExistInCart.quantity + 1 >= doesExistInCart.quantityInStock
-    ) {
-      setDisabledAddToCartButton(true);
-    } else {
-      setDisabledAddToCartButton(false);
-    }
 
     dispatch(addToCart(cartData));
     toast.success("Item added to cart successfully !", {
@@ -62,27 +76,29 @@ const ProductDetails = () => {
       <div className="sm:w-1/2 border-red-700 my-auto">
         <img
           className="sm:h-64 sm:w-full md:h-4/5 md:m-auto lg:w-full lg:h-full"
-          src="https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png"
+          src={image}
           alt=""
         />
       </div>
-      <div className="space-y-4 my-auto sm:w-1/2">
-        <h2 className="text-2xl font-semibold">{name}</h2>
+      <div className="space-y-3 my-auto sm:w-1/2">
+        <h2 className="text-2xl font-semibold text-start">{name}</h2>
 
-        <h2 className="font-medium text-lg">
+        <h2 className="font-semibold text-lg text-start">
           Category : <span className="text-blue-500">{category}</span>
         </h2>
-        <p className="text-lg italic">
-          <span className="">Description</span> : {description}
+        <p className="text-lg font-semibold">
+          Description : <span className="italic">{description}</span>
         </p>
         <Button
           disabled={disabledAddToCartButton}
           onClick={handleAddToCart}
-          className="bg-rose-600 hover:text-white max-w-24 border-rose-700 hover:bg-rose-700"
+          className="bg-rose-600 hover:text-white max-w-24 border-rose-700 hover:bg-rose-700 h-9"
         >
           Add To Cart
         </Button>
-        <h2 className="text-yellow-600 text-lg">$ {price}</h2>
+        <h2 className="text-orange-600 font-semibold text-lg text-start">
+          $ {price}
+        </h2>
         <h2 className="flex items-center gap-1 text-sm">
           {inStock ? (
             <>

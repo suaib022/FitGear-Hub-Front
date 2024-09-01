@@ -2,10 +2,11 @@ import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import HeaderComponent from "./Header";
-import Footer from "../Homepage/Footer";
+
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import { getAllCartItems } from "@/redux/features/cart/cartSlice";
+import Footer from "./Footer";
 
 interface DataType {
   key: React.Key;

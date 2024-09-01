@@ -20,6 +20,7 @@ import {
   deleteCartItems,
   getAllCartItems,
 } from "@/redux/features/cart/cartSlice";
+import errorImg from "../../assets/Result/error-404.png";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -40,8 +41,6 @@ const ManageProduct = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   let clickedOne: any;
-
-  // console.log({ showMultipleDeleteButton });
 
   const [deleteSingleProduct, { isLoading: isDeleteLoading }] =
     useDeleteSingleProductMutation();
@@ -68,7 +67,7 @@ const ManageProduct = () => {
   }
 
   if (isError) {
-    return <div>Error loading products</div>;
+    return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
   const data: DataType[] = products.data.map((item, index) => ({
@@ -116,7 +115,6 @@ const ManageProduct = () => {
     if (res.error) {
       toast.error("Something went wrong !", { id: toastId, duration: 2000 });
     }
-    console.log({ res });
   };
 
   const handleMultipleDelete = async () => {
@@ -130,7 +128,6 @@ const ManageProduct = () => {
       }
     }
 
-    console.log({ toBeDeletedCartItems });
     dispatch(deleteCartItems({ selectedCartItems: toBeDeletedCartItems }));
     const res = await deleteMultipleProducts(ids);
 
@@ -160,11 +157,7 @@ const ManageProduct = () => {
       title: "Image",
       dataIndex: "image",
       render: (image: string) => (
-        <img
-          // src="https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png"
-          src={image}
-          style={{ width: 70, height: 70 }}
-        />
+        <img src={image} style={{ width: 70, height: 70 }} />
       ),
     },
     {
@@ -208,8 +201,11 @@ const ManageProduct = () => {
   return (
     <div>
       <div className="flex justify-between mb-4">
-        <Button className="bg-blue-500 text-white hover:bg-rose-600">
-          <NavLink to={"/create-product"}>Add Product</NavLink>
+        <Button
+          onClick={() => navigate("/create-product")}
+          className="bg-blue-500 text-white hover:bg-rose-600"
+        >
+          Add Product
         </Button>
         {showMultipleDeleteButton ? (
           <Button

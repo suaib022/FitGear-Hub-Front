@@ -3,8 +3,17 @@ import {
   useGetSingleProductQuery,
   useUpdateSingleProductMutation,
 } from "@/redux/features/product/productApi";
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Select, Upload, UploadProps } from "antd";
+import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Flex,
+  Form,
+  Input,
+  Select,
+  Spin,
+  Upload,
+  UploadProps,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import img from "../../assets/Form/2.png";
@@ -16,6 +25,7 @@ import {
   updateCartQuantity,
 } from "@/redux/features/cart/cartSlice";
 import { useDispatch } from "react-redux";
+import errorImg from "../../assets/Result/error-404.png";
 
 type TUpdatedData = {
   name?: string;
@@ -39,7 +49,7 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
 
   if (productId === undefined) {
-    return <div>Error: ID is missing</div>;
+    return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
   const { data: productData, isLoading } = useGetSingleProductQuery(productId);
@@ -64,10 +74,8 @@ const UpdateProduct = () => {
   }, [productData, form]);
 
   const onCategorySelect = (value, label) => {
-    setCategory(label);
+    setCategory(value);
   };
-
-  console.log({ Category });
 
   const onFinish = async (values) => {
     let toastId;
@@ -81,8 +89,6 @@ const UpdateProduct = () => {
         category: values.category || Category.label,
         quantity: Number(values.quantity),
       };
-
-      console.log({ updatedData });
 
       const res = await updateSingleProduct({
         productId,
@@ -136,7 +142,14 @@ const UpdateProduct = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Flex align="center" gap="middle">
+        <Spin
+          className="fixed inset-0 flex items-center justify-center"
+          indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+        />
+      </Flex>
+    );
   }
 
   return (
@@ -219,13 +232,13 @@ const UpdateProduct = () => {
                   { value: "Cardio", label: "Cardio" },
                   { value: "Strength", label: "Strength" },
                   { value: "Functional", label: "Functional" },
-                  { value: "Bodyweight", label: "Bodyweight" },
+                  { value: "BodyWeight", label: "Body Weight" },
                   { value: "Accessories", label: "Accessories" },
                   { value: "Recovery", label: "Recovery" },
                   { value: "Flooring", label: "Flooring" },
                   { value: "Storage", label: "Storage" },
                   { value: "Specialty", label: "Specialty" },
-                  { value: "Gym Packages", label: "Gym Packages" },
+                  { value: "GymPackages", label: "Gym Packages" },
                 ]}
               />
             </Form.Item>

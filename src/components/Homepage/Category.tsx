@@ -11,31 +11,31 @@ import packages from "../../assets/Icons/package.png";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 const categories = [
-  { src: cardio, label: "Cardio" },
-  { src: strength, label: "Strength" },
-  { src: functional, label: "Functional" },
-  { src: bodyWeight, label: "Body Weight" },
-  { src: accessories, label: "Accessories" },
-  { src: recovery, label: "Recovery" },
-  { src: flooring, label: "Flooring" },
-  { src: storage, label: "Storage" },
-  { src: specialty, label: "Specialty" },
-  { src: packages, label: "Gym Packages" },
+  { src: cardio, label: "Cardio", value: "Cardio" },
+  { src: strength, label: "Strength", value: "Strength" },
+  { src: functional, label: "Functional", value: "Functional" },
+  { src: bodyWeight, label: "Body Weight", value: "BodyWeight" },
+  { src: accessories, label: "Accessories", value: "Accessories" },
+  { src: recovery, label: "Recovery", value: "Recovery" },
+  { src: flooring, label: "Flooring", value: "Flooring" },
+  { src: storage, label: "Storage", value: "Storage" },
+  { src: specialty, label: "Specialty", value: "Specialty" },
+  { src: packages, label: "Gym Packages", value: "GymPackages" },
 ];
 
 const Category = () => {
   const { setCategory, setCheckedList } = useOutletContext();
   const navigate = useNavigate();
-  const handleCategoryClick = (label) => {
-    setCategory([label]);
-    setCheckedList([label]);
+  const handleCategoryClick = (value) => {
+    setCategory([value]);
+    setCheckedList([value]);
     navigate("/products");
   };
   return (
     <div className="text-center mt-8 pt-4 rounded-md bg-gray-200 text-sm font-medium flex lg:justify-center pb-6 gap-12 overflow-y-auto px-4">
       {categories.map((category, index) => (
         <div
-          onClick={() => handleCategoryClick(category.label)}
+          onClick={() => handleCategoryClick(category.value)}
           key={index}
           className="flex flex-col justify-center items-center transition-transform transform hover:scale-105 hover:bg-gray-300 rounded-full p-2"
         >

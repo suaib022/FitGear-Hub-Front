@@ -37,7 +37,7 @@ const AboutUs = () => {
       : description;
 
   return (
-    <div className="about-us">
+    <div className="about-us rounded-lg shadow-xl">
       <section className="company-overview">
         <h2 className="text-3xl font-semibold">About FitGear Hub</h2>
         <p className="italic">
@@ -94,13 +94,8 @@ const AboutUs = () => {
       </div>
 
       <section className="contact-information">
-        <h2 className="text-3xl mt-8 font-semibold">Contact Us</h2>
-        {/* <p className="font-semibold">Email: support@fitgearhub.com</p>
-        <p>Phone: +123-456-7890</p>
-        <p>Address: 123 Fitness St, Workout City, Fitland</p>
-        <p>
-          We'd love to hear from you! Reach out with any questions or feedback.
-        </p> */}
+        <h2 className="text-3xl mt-9 font-semibold">Contact Us</h2>
+
         <ContactUs />
       </section>
     </div>

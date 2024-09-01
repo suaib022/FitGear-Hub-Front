@@ -13,16 +13,16 @@ import { Button } from "../ui/button";
 const CheckboxGroup = Checkbox.Group;
 
 const categories = [
-  "Cardio",
-  "Strength",
-  "Functional",
-  "Body Weight",
-  "Accessories",
-  "Recovery",
-  "Flooring",
-  "Storage",
-  "Specialty",
-  "Gym Packages",
+  { value: "Cardio", label: "Cardio" },
+  { value: "Strength", label: "Strength" },
+  { value: "Functional", label: "Functional" },
+  { value: "BodyWeight", label: "Body Weight" },
+  { value: "Accessories", label: "Accessories" },
+  { value: "Recovery", label: "Recovery" },
+  { value: "Flooring", label: "Flooring" },
+  { value: "Storage", label: "Storage" },
+  { value: "Specialty", label: "Specialty" },
+  { value: "GymPackages", label: "Gym Packages" },
 ];
 
 const FilterDrawer = ({
@@ -88,11 +88,8 @@ const FilterDrawer = ({
       range[1] !== highest ||
       sortByPrice !== ""
     ) {
-      console.log(checkedList.length, inStock, range, sortByPrice, highest);
-      console.log("1");
       setDisabledButton(false);
     } else {
-      console.log("2");
       setDisabledButton(true);
     }
   }, [checkedList, inStock, range, highest, sortByPrice]);
@@ -116,17 +113,14 @@ const FilterDrawer = ({
   };
 
   const onCheckAllChange = (e) => {
-    setCheckedList(e.target.checked ? categories : []);
-    setCategory(e.target.checked ? categories : []);
-    if (e.target.checked) {
-      setDisabledButton(false);
-    }
+    const allValues = e.target.checked
+      ? categories.map((item) => item.value)
+      : [];
+    setCheckedList(allValues);
+    setCategory(allValues);
   };
 
-  const onChange2 = (list) => {
-    if (list.length > 0) {
-      setDisabledButton(false);
-    }
+  const onChange = (list) => {
     setCheckedList(list);
     setCategory(list);
   };
@@ -139,18 +133,12 @@ const FilterDrawer = ({
     }
   };
 
-  // console.log({ inStock });
-
-  // console.log({ highest });
-
   const handleClearFilter = () => {
     setCheckedList([]);
     setInStock();
     setRange([0, highest]);
     setSortByPrice("default");
   };
-
-  console.log(range);
 
   return (
     <>
@@ -241,7 +229,7 @@ const FilterDrawer = ({
                 className="flex flex-col gap-3 font-semibold"
                 options={categories}
                 value={checkedList}
-                onChange={onChange2}
+                onChange={onChange}
               />
             </AccordionContent>
           </AccordionItem>

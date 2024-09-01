@@ -5,7 +5,7 @@ import {
 } from "@/redux/features/cart/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import React, { useEffect, useState } from "react";
-import { Input, Table } from "antd";
+import { Flex, Input, Spin, Table } from "antd";
 import type { TableColumnsType } from "antd";
 import { Button } from "@/components/ui/button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -14,6 +14,7 @@ import img from "../../assets/Result/no-data-found.png";
 import { Space } from "antd";
 import Swal from "sweetalert2";
 import { useGetallProductsQuery } from "@/redux/features/product/productApi";
+import { LoadingOutlined } from "@ant-design/icons";
 
 interface DataType {
   key: React.Key;
@@ -47,8 +48,6 @@ const Cart = () => {
     isLoading: isAllProductsLoading,
     isError: isAllProductsError,
   } = useGetallProductsQuery({ limit: 5000 });
-
-  console.log({ disabledCartButtons });
 
   const data: DataType[] = cartItems.map((item, index) => ({
     key: index,
@@ -158,8 +157,6 @@ const Cart = () => {
         quantityInStock: updatedItem.quantityInStock,
       };
 
-      console.log({ updatedItemWithNewQuantity, value });
-
       dispatch(
         updateCartQuantity({
           updatedQuantity: newQuantity,
@@ -244,6 +241,17 @@ const Cart = () => {
       ),
     },
   ];
+
+  if (isAllProductsLoading) {
+    return (
+      <Flex align="center" gap="middle">
+        <Spin
+          className="fixed inset-0 flex items-center justify-center"
+          indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+        />
+      </Flex>
+    );
+  }
 
   return (
     <div>

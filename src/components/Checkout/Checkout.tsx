@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, message, Steps, theme } from "antd";
+import { Button, Steps, theme } from "antd";
 import Payment from "./Payment";
 import OrderSummary from "./OrderSummary";
 import UserDetailsForm from "./UserDetailsForm";
@@ -49,8 +49,6 @@ const Checkout = () => {
       ),
     },
   ];
-
-  console.log({ disableProceedButton });
 
   const next = () => {
     setCurrent(current + 1);

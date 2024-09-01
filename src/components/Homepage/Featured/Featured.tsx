@@ -4,6 +4,7 @@ import { Flex, Spin } from "antd";
 import FeaturedCard from "./Card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import errorImg from "../../../assets/Result/error-404.png";
 
 const Featured = () => {
   const {
@@ -11,7 +12,6 @@ const Featured = () => {
     isError,
     isLoading,
   } = useGetallProductsQuery({ limit: 4 });
-  console.log({ products });
 
   const navigate = useNavigate();
 
@@ -30,6 +30,10 @@ const Featured = () => {
     );
   }
 
+  if (isError) {
+    <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
+  }
+
   return (
     <div className="bg-gray-200 rounded-md">
       <h2 className="text-4xl text-center font-bold my-12 mx-auto flex pt-6 justify-center">
@@ -43,7 +47,7 @@ const Featured = () => {
       <div className="pb-6">
         <Button
           onClick={() => navigate("/products")}
-          className="mt-8 bg-rose-500 w-40 mx-auto flex"
+          className="mt-8 bg-rose-500 w-40 hover:bg-rose-600 mx-auto flex"
         >
           Explore More
         </Button>

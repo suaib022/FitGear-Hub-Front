@@ -5,7 +5,7 @@ import telephone from "../../assets/ContuctUs/telephone.png";
 
 const ContactUs = () => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 ">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-6 mt-7">
       <div className="flex justify-center">
         <img className="w-12" src={mail} alt="" />
       </div>

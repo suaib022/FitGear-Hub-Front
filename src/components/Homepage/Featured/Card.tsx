@@ -20,13 +20,7 @@ const FeaturedCard = ({ item }) => {
         className={` ${hovered ? "hovered-card " : ""}`}
         hoverable
         style={{ width: 240, position: "relative", overflow: "hidden" }}
-        cover={
-          <img
-            className="h-64 card-image"
-            alt=""
-            src="https://images.stockcake.com/public/0/e/5/0e5bcc32-c33c-4137-bd01-c3befacadffb_large/gym-rope-hanging-stockcake.jpg"
-          />
-        }
+        cover={<img className="h-64 card-image" alt="" src={item.image} />}
       >
         <Meta title={item.name} description="" />
         <Button

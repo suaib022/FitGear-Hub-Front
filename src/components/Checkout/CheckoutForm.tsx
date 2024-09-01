@@ -21,8 +21,6 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
   const { selectedCartItems, setSelectedCartItems } = useOutletContext();
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    console.log("Success:", values);
-
     if (!stripe || !elements) {
       return;
     }
@@ -40,8 +38,6 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
       card,
     });
 
-    console.log({ Error });
-
     if (error) {
       setPaymentSuccess(false);
       toast.error(error.message, { duration: 2000, id: toastId });
@@ -56,7 +52,7 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
   ) => {
-    console.log("Failed:", errorInfo);
+    toast.error("Something went wrong !", { duration: 2000 });
   };
   return (
     <div>

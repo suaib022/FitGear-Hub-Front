@@ -30,8 +30,6 @@ const Payment = ({
     }
   };
 
-  console.log({ paymentMethod });
-
   return (
     <div>
       {paymentSuccess ? (

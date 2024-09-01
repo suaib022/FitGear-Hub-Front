@@ -8,19 +8,13 @@ const { Sider } = Layout;
 const Sidebar = () => {
   const sidebarItems = sidebarItemsGenerator(allPaths);
 
-  console.log("object", sidebarItems);
-
   return (
     <Sider
       className="h-full"
       breakpoint="lg"
       collapsedWidth="0"
-      onBreakpoint={() => {
-        console.log("broken");
-      }}
-      onCollapse={() => {
-        console.log("collapsed, type");
-      }}
+      onBreakpoint={() => {}}
+      onCollapse={() => {}}
     >
       <div
         style={{
