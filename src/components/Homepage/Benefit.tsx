@@ -17,7 +17,7 @@ const Benefit = () => {
           <div className="p-4 bg-white rounded-lg shadow-lg">
             <img src={img1} className="mb-4 mx-auto" />
             <h3 className="text-2xl font-semibold mb-3">Built to Last</h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Our equipment is engineered for durability, ensuring it withstands
               even the toughest workouts. This means you can rely on our
               products for years to come, making it a wise investment in your
@@ -27,7 +27,7 @@ const Benefit = () => {
           <div className="p-4 bg-white rounded-lg shadow-lg">
             <img src={img2} alt="Durable Equipment" className="mb-4 mx-auto" />
             <h3 className="text-2xl font-semibold mb-3">Customized Workouts</h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Whether you're a beginner or an expert, our range of products
               allows you to tailor your workouts to meet your specific fitness
               goals, from weight loss to muscle gain.
@@ -38,7 +38,7 @@ const Benefit = () => {
             <h3 className="text-2xl font-semibold mb-3">
               Enhance Your Performance
             </h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Our equipment is designed to improve your strength, endurance, and
               flexibility, helping you achieve peak performance in your fitness
               journey.
@@ -49,7 +49,7 @@ const Benefit = () => {
             <h3 className="text-2xl font-semibold mb-3">
               Convenient Home Workouts
             </h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Enjoy the convenience of working out at home with our
               space-saving, easy-to-use equipment. No need for a gym
               membership—get fit on your own schedule.
@@ -58,7 +58,7 @@ const Benefit = () => {
           <div className="p-4 bg-white rounded-lg shadow-lg">
             <img src={img5} alt="Durable Equipment" className="mb-4 mx-auto" />
             <h3 className="text-2xl font-semibold mb-3">Injury Prevention</h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Our ergonomically designed equipment minimizes the risk of injury,
               allowing you to train safely and effectively, even during intense
               sessions.
@@ -69,7 +69,7 @@ const Benefit = () => {
             <h3 className="text-2xl font-semibold mb-3">
               Boost Your Confidence
             </h3>
-            <p className="text-gray-600 font-semibold">
+            <p className="text-gray-600 font-semibold italic">
               Achieve your fitness goals and feel more confident in your body
               with regular use of our high-quality equipment. Transform your
               body and mind, one workout at a time.

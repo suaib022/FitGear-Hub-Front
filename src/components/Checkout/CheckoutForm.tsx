@@ -5,6 +5,11 @@ import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/hooks";
 import { useOutletContext } from "react-router-dom";
 import { deleteCartItems } from "@/redux/features/cart/cartSlice";
+import { useEffect } from "react";
+import {
+  useGetallProductsQuery,
+  useUpdateSingleProductMutation,
+} from "@/redux/features/product/productApi";
 
 type FieldType = {
   name?: string;
@@ -14,11 +19,63 @@ type FieldType = {
   receiveFrom?: string;
 };
 
-const CheckoutForm = ({ setPaymentSuccess }) => {
+const CheckoutForm = ({
+  setPaymentSuccess,
+  updateProductQuantities,
+  isLoading,
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const dispatch = useAppDispatch();
   const { selectedCartItems, setSelectedCartItems } = useOutletContext();
+
+  // const [updateSingleProduct] = useUpdateSingleProductMutation();
+  // const { data: allProducts, isLoading } = useGetallProductsQuery({
+  //   limit: 50000,
+  // });
+
+  // useEffect(() => {
+  //   if (allProducts && selectedCartItems) {
+  //     const existingItems = selectedCartItems.map((cartItem) =>
+  //       allProducts.data.find((product) => product._id === cartItem._id)
+  //     );
+
+  //     setExistingProducts(existingItems);
+  //   }
+  // }, [selectedCartItems, setExistingProducts, allProducts]);
+
+  // const updateProductQuantities = async () => {
+  //   const updatedProducts = existingProducts.map((product) => {
+  //     const cartItem = selectedCartItems.find(
+  //       (item) => item._id === product._id
+  //     );
+  //     if (cartItem) {
+  //       return {
+  //         ...product,
+  //         quantity: product.quantity - cartItem.quantity,
+  //       };
+  //     }
+  //     return product;
+  //   });
+
+  //   setExistingProducts(updatedProducts);
+
+  //   for (const product of updatedProducts) {
+  //     const cartItem = selectedCartItems.find(
+  //       (item) => item._id === product._id
+  //     );
+  //     if (cartItem) {
+  //       const updatedData = {
+  //         quantity: product.quantity,
+  //       };
+
+  //       await updateSingleProduct({
+  //         productId: product._id,
+  //         updatedData,
+  //       });
+  //     }
+  //   }
+  // };
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     if (!stripe || !elements) {
@@ -43,6 +100,9 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
       toast.error(error.message, { duration: 2000, id: toastId });
     } else {
       toast.success("Payment Successful !!!", { id: toastId, duration: 2000 });
+
+      await updateProductQuantities();
+
       dispatch(deleteCartItems({ selectedCartItems }));
       setSelectedCartItems([]);
       setPaymentSuccess(true);
@@ -54,6 +114,10 @@ const CheckoutForm = ({ setPaymentSuccess }) => {
   ) => {
     toast.error("Something went wrong !", { duration: 2000 });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <Form

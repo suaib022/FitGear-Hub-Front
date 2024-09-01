@@ -21,6 +21,7 @@ import {
   getAllCartItems,
 } from "@/redux/features/cart/cartSlice";
 import errorImg from "../../assets/Result/error-404.png";
+import Swal from "sweetalert2";
 
 type TableRowSelection<T> = TableProps<T>["rowSelection"];
 
@@ -93,56 +94,99 @@ const ManageProduct = () => {
   };
 
   // actions
-  const handleDeleteOne = async (key: React.Key) => {
-    const toastId = toast.loading("Deleting...");
-    clickedOne = data.find((item) => item.key === key);
-    const toBeDeletedCartItem = cartItems.find(
-      (item) => item._id === clickedOne!._id
-    );
+  const handleDeleteOne = (key: React.Key) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        clickedOne = data.find((item) => item.key === key);
+        const toBeDeletedCartItem = cartItems.find(
+          (item) => item._id === clickedOne!._id
+        );
 
-    if (toBeDeletedCartItem) {
-      dispatch(deleteCartItems({ selectedCartItems: [toBeDeletedCartItem] }));
-      toast.success("Also Deleted from cart !", { duration: 3000 });
-    }
+        if (toBeDeletedCartItem) {
+          dispatch(
+            deleteCartItems({ selectedCartItems: [toBeDeletedCartItem] })
+          );
+          toast.success("Also Deleted from cart !", { duration: 3000 });
+        }
 
-    const res = await deleteSingleProduct(clickedOne!._id);
+        const res = deleteSingleProduct(clickedOne!._id);
 
-    if (res.data.success) {
-      toast.success("Deleted successfully !", { id: toastId, duration: 2000 });
-      setSelectedItems([]);
-      setSelectedRowKeys([]);
-    }
-    if (res.error) {
-      toast.error("Something went wrong !", { id: toastId, duration: 2000 });
-    }
+        res.then((result) => {
+          console.log(result.data);
+          if (result.data.success) {
+            toast.success("Deleted successfully !", {
+              duration: 2000,
+            });
+            setSelectedItems([]);
+            setSelectedRowKeys([]);
+          } else {
+            toast.error("Something went wrong !", {
+              duration: 2000,
+            });
+          }
+        });
+      }
+    });
   };
 
   const handleMultipleDelete = async () => {
-    const ids: string[] = selectedItems.map((item) => item._id);
-    let toBeDeletedCartItems = [];
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete them!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const ids: string[] = selectedItems.map((item) => item._id);
+        let toBeDeletedCartItems = [];
 
-    for (let i = 0; i < ids.length; i++) {
-      const doesExistInCart = cartItems.find((item) => item._id === ids[i]);
-      if (doesExistInCart) {
-        toBeDeletedCartItems.push(doesExistInCart);
+        for (let i = 0; i < ids.length; i++) {
+          const doesExistInCart = cartItems.find((item) => item._id === ids[i]);
+          if (doesExistInCart) {
+            toBeDeletedCartItems.push(doesExistInCart);
+          }
+        }
+
+        dispatch(deleteCartItems({ selectedCartItems: toBeDeletedCartItems }));
+        const res = deleteMultipleProducts(ids);
+
+        res.then((result) => {
+          console.log({ result });
+
+          if (result.data.success) {
+            toast.success(result.data.message, { duration: 2000 });
+            setSelectedItems([]);
+            setSelectedRowKeys([]);
+            setShowMultipleDeleteButton(false);
+          } else {
+            toast.error("Something went wrong !", { duration: 2000 });
+          }
+        });
       }
-    }
-
-    dispatch(deleteCartItems({ selectedCartItems: toBeDeletedCartItems }));
-    const res = await deleteMultipleProducts(ids);
-
-    if (res.data.data.deletedCount) {
-      toast.success(`${res.data.message}`, { duration: 2000 });
-      setSelectedItems([]);
-      setSelectedRowKeys([]);
-      setShowMultipleDeleteButton(false);
-    }
+    });
   };
 
   const handleGoToUpdate = async (key: React.Key) => {
     clickedOne = data.find((item) => item.key === key);
 
     navigate(`/update-product/${clickedOne._id}`);
+  };
+
+  const handleGoToDetails = async (key: React.Key) => {
+    clickedOne = data.find((item) => item.key === key);
+
+    navigate(`/products/${clickedOne._id}`);
   };
 
   // row and column
@@ -156,8 +200,12 @@ const ManageProduct = () => {
     {
       title: "Image",
       dataIndex: "image",
-      render: (image: string) => (
-        <img src={image} style={{ width: 70, height: 70 }} />
+      render: (image: string, record) => (
+        <img
+          src={image}
+          onClick={() => handleGoToDetails(record.key)}
+          style={{ width: 70, height: 70 }}
+        />
       ),
     },
     {

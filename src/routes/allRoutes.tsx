@@ -6,7 +6,7 @@ import ProductDetails from "@/pages/product/ProductDetails";
 import Cart from "@/pages/Cart/Cart";
 import UpdateProduct from "@/pages/admin/UpdateProduct";
 import Home from "@/pages/Homepage/Home";
-import Checkout from "@/components/Checkout/Checkout";
+import Checkout from "@/pages/checkout/Checkout";
 
 export const allPaths = [
   { name: "Products", path: "products", element: <Product /> },

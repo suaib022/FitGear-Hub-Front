@@ -178,7 +178,19 @@ const UpdateProduct = () => {
             <Form.Item
               label="Price"
               name="price"
-              rules={[{ required: true, message: "Please enter your price!" }]}
+              rules={[
+                { required: true, message: "Please enter your price!" },
+                {
+                  validator(_, value) {
+                    if (value > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Price must be a positive number!")
+                    );
+                  },
+                },
+              ]}
             >
               <Input className="max-w-72" type="number" />
             </Form.Item>
@@ -250,6 +262,16 @@ const UpdateProduct = () => {
                 {
                   required: true,
                   message: "Please enter your quantity!",
+                },
+                {
+                  validator(_, value) {
+                    if (value >= 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Quantity must be a non-negative number!")
+                    );
+                  },
                 },
               ]}
             >

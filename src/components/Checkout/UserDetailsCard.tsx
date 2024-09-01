@@ -17,15 +17,28 @@ const UserDetailsCard = ({ userDetails, setEmptyUser }) => {
         </div>
       }
       bordered={false}
-      style={{ width: 300 }}
+      style={{ maxWidth: 400 }}
     >
-      <div className="space-y-1 font-semibold">
-        <p>Name : {name}</p>
-        <p>Contact Number : {contact}</p>
-        <p>Email : {email}</p>
-        <p>Shipping Address : {shippingAddress}</p>
+      <div className="space-y-1 font-semibold ">
         <p>
-          Will Receive From : <span className="uppercase">{receivedFrom}</span>
+          <span className=" font-semibold">Name</span> :{"  "}
+          <span className="italic ">{name}</span>
+        </p>
+        <p>
+          <span className=" font-semibold">Contact Number</span> :{" "}
+          <span className="italic ">{contact}</span>
+        </p>
+        <p>
+          <span className=" font-semibold">Email</span> :{" "}
+          <span className="italic ">{email}</span>
+        </p>
+        <p>
+          <span className=" font-semibold">Shipping Address</span> :{" "}
+          <span className="italic ">{shippingAddress}</span>
+        </p>
+        <p>
+          <span className=" font-semibold">Will Receive From</span> :{" "}
+          <span className="uppercase ">{receivedFrom}</span>
         </p>
       </div>
     </Card>

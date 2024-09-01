@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button, Steps, theme } from "antd";
-import Payment from "./Payment";
-import OrderSummary from "./OrderSummary";
-import UserDetailsForm from "./UserDetailsForm";
+import Payment from "../../components/Checkout/Payment";
+import OrderSummary from "../../components/Checkout/OrderSummary";
+import UserDetailsForm from "../../components/Checkout/UserDetailsForm";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAppDispatch } from "@/redux/hooks";
 import { removeUserDetails } from "@/redux/features/UserDetails/userDetailsSlice";
 import { deleteCartItems } from "@/redux/features/cart/cartSlice";
+import {
+  useGetallProductsQuery,
+  useUpdateSingleProductMutation,
+} from "@/redux/features/product/productApi";
 
 const Checkout = () => {
   const { token } = theme.useToken();
@@ -16,11 +20,60 @@ const Checkout = () => {
   const [userDetailsMissing, setUserDetailsMissing] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [existingProducts, setExistingProducts] = useState([]);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { selectedCartItems, setSelectedCartItems } = useOutletContext();
+
+  const [updateSingleProduct] = useUpdateSingleProductMutation();
+  const { data: allProducts, isLoading } = useGetallProductsQuery({
+    limit: 50000,
+  });
+
+  useEffect(() => {
+    if (allProducts && selectedCartItems) {
+      const existingItems = selectedCartItems.map((cartItem) =>
+        allProducts.data.find((product) => product._id === cartItem._id)
+      );
+
+      setExistingProducts(existingItems);
+    }
+  }, [selectedCartItems, setExistingProducts, allProducts]);
+
+  const updateProductQuantities = async () => {
+    const updatedProducts = existingProducts.map((product) => {
+      const cartItem = selectedCartItems.find(
+        (item) => item._id === product._id
+      );
+      if (cartItem) {
+        return {
+          ...product,
+          quantity: product.quantity - cartItem.quantity,
+        };
+      }
+      return product;
+    });
+
+    setExistingProducts(updatedProducts);
+
+    for (const product of updatedProducts) {
+      const cartItem = selectedCartItems.find(
+        (item) => item._id === product._id
+      );
+      if (cartItem) {
+        const updatedData = {
+          quantity: product.quantity,
+        };
+
+        await updateSingleProduct({
+          productId: product._id,
+          updatedData,
+        });
+      }
+    }
+  };
 
   const steps = [
     {
@@ -40,6 +93,8 @@ const Checkout = () => {
       title: "Payment",
       content: (
         <Payment
+          isLoading={isLoading}
+          updateProductQuantities={updateProductQuantities}
           paymentMethod={paymentMethod}
           setPaymentMethod={setPaymentMethod}
           setDisableProceedButton={setDisableProceedButton}
@@ -97,6 +152,7 @@ const Checkout = () => {
     if (paymentMethod === "cash") {
       dispatch(deleteCartItems({ selectedCartItems }));
       setSelectedCartItems([]);
+      updateProductQuantities();
     }
     navigate("/");
     dispatch(removeUserDetails());

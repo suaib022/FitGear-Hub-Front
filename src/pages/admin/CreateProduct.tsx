@@ -19,6 +19,8 @@ const CreateProduct = () => {
   const [category, setCategory] = useState("");
   const [disableUploadButton, setDisableUploadButton] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
+  const [quantityError, setQuantityError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -30,9 +32,27 @@ const CreateProduct = () => {
   };
 
   const onSubmit = async (data: FieldValues) => {
+    const { price, quantity } = data;
+
+    console.log({ data });
+
+    if (price <= 0) {
+      setPriceError(true);
+      return;
+    } else {
+      setPriceError(false);
+    }
+
     if (!category) {
       setCategoryError(true);
       return;
+    }
+
+    if (quantity <= 0) {
+      setQuantityError(true);
+      return;
+    } else {
+      setQuantityError(false);
     }
 
     let toastId;
@@ -68,6 +88,7 @@ const CreateProduct = () => {
     name: "image",
     listType: "picture",
     onChange({ file }) {
+      console.log({ file });
       if (file.status === "done") {
         const uploadedImageUrl = file.response.data.url;
         setImageUrl(uploadedImageUrl);
@@ -119,6 +140,12 @@ const CreateProduct = () => {
                 name="price"
                 label="Price :"
               ></FormInput>
+              {priceError && (
+                <div className="text-red-500">
+                  Price must be a positive number
+                </div>
+              )}
+
               <FormInput
                 required={true}
                 className={`text-wrap`}
@@ -175,6 +202,12 @@ const CreateProduct = () => {
                 name="quantity"
                 label="Quantity :"
               ></FormInput>
+              {quantityError && (
+                <div className="text-red-500">
+                  Quantity must be a positive number
+                </div>
+              )}
+
               <Button htmlType="submit">Create</Button>
             </div>
           </UseForm>
