@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "./aboutUs.css";
 
 import { useState } from "react";
@@ -9,8 +10,8 @@ import {
   description5,
   teamMembers,
 } from "./aboutUsConstants";
-import Testimonials from "./testomonials";
-import ContactUs from "./contactUs";
+import ContactUs from "@/components/AboutUs/contactUs";
+import Testimonials from "@/components/AboutUs/Testimonials/testomonials";
 
 const AboutUs = () => {
   const descriptions = [
@@ -25,13 +26,13 @@ const AboutUs = () => {
     new Array(descriptions.length).fill(false)
   );
 
-  const toggleDescription = (index) => {
+  const toggleDescription = (index: any) => {
     const updatedShowFullDescription = [...showFullDescription];
     updatedShowFullDescription[index] = !updatedShowFullDescription[index];
     setShowFullDescription(updatedShowFullDescription);
   };
 
-  const truncateDescription = (description, index) =>
+  const truncateDescription = (description: any, index: any) =>
     description.length > 100 && !showFullDescription[index]
       ? `${description.substring(0, 100)}...`
       : description;

@@ -18,12 +18,14 @@ const ProductDetails = () => {
   const allCartItems = useAppSelector(getAllCartItems);
   const { productId } = useParams<{ productId: string }>();
 
+  // handle addToCart button status
   const doesExistInCart = allCartItems.find((item) => item._id === productId);
 
   useEffect(() => {
     if (
       doesExistInCart &&
-      doesExistInCart.quantity >= doesExistInCart.quantityInStock
+      (doesExistInCart!.quantity as number) >=
+        (doesExistInCart!.quantityInStock as number)
     ) {
       setDisabledAddToCartButton(true);
     } else {

@@ -10,7 +10,13 @@ export type TUserDetails = {
   receivedFrom: string | null;
 };
 
-const initialState: TUserDetails = {};
+const initialState: TUserDetails = {
+  name: null,
+  contact: null,
+  email: null,
+  shippingAddress: null,
+  receivedFrom: null,
+};
 
 const userDetailsSlice = createSlice({
   name: "userDetails",

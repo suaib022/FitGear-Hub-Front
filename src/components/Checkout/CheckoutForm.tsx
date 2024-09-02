@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Form, FormProps } from "antd";
 import { Button } from "../ui/button";
@@ -5,11 +7,6 @@ import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/hooks";
 import { useOutletContext } from "react-router-dom";
 import { deleteCartItems } from "@/redux/features/cart/cartSlice";
-import { useEffect } from "react";
-import {
-  useGetallProductsQuery,
-  useUpdateSingleProductMutation,
-} from "@/redux/features/product/productApi";
 
 type FieldType = {
   name?: string;
@@ -23,61 +20,13 @@ const CheckoutForm = ({
   setPaymentSuccess,
   updateProductQuantities,
   isLoading,
-}) => {
+}: any) => {
   const stripe = useStripe();
   const elements = useElements();
   const dispatch = useAppDispatch();
-  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
+  const { selectedCartItems, setSelectedCartItems } = useOutletContext<any>();
 
-  // const [updateSingleProduct] = useUpdateSingleProductMutation();
-  // const { data: allProducts, isLoading } = useGetallProductsQuery({
-  //   limit: 50000,
-  // });
-
-  // useEffect(() => {
-  //   if (allProducts && selectedCartItems) {
-  //     const existingItems = selectedCartItems.map((cartItem) =>
-  //       allProducts.data.find((product) => product._id === cartItem._id)
-  //     );
-
-  //     setExistingProducts(existingItems);
-  //   }
-  // }, [selectedCartItems, setExistingProducts, allProducts]);
-
-  // const updateProductQuantities = async () => {
-  //   const updatedProducts = existingProducts.map((product) => {
-  //     const cartItem = selectedCartItems.find(
-  //       (item) => item._id === product._id
-  //     );
-  //     if (cartItem) {
-  //       return {
-  //         ...product,
-  //         quantity: product.quantity - cartItem.quantity,
-  //       };
-  //     }
-  //     return product;
-  //   });
-
-  //   setExistingProducts(updatedProducts);
-
-  //   for (const product of updatedProducts) {
-  //     const cartItem = selectedCartItems.find(
-  //       (item) => item._id === product._id
-  //     );
-  //     if (cartItem) {
-  //       const updatedData = {
-  //         quantity: product.quantity,
-  //       };
-
-  //       await updateSingleProduct({
-  //         productId: product._id,
-  //         updatedData,
-  //       });
-  //     }
-  //   }
-  // };
-
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+  const onFinish: FormProps<FieldType>["onFinish"] = async (_values) => {
     if (!stripe || !elements) {
       return;
     }
@@ -90,7 +39,7 @@ const CheckoutForm = ({
 
     const toastId = toast.loading("Payment in process...");
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+    const { error } = await stripe.createPaymentMethod({
       type: "card",
       card,
     });
@@ -110,7 +59,7 @@ const CheckoutForm = ({
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
+    _errorInfo
   ) => {
     toast.error("Something went wrong !", { duration: 2000 });
   };

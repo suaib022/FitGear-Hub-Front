@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import {
   useGetSingleProductQuery,
@@ -26,6 +28,7 @@ import {
 } from "@/redux/features/cart/cartSlice";
 import { useDispatch } from "react-redux";
 import errorImg from "../../assets/Result/error-404.png";
+import { TCategory } from "./CreateProduct";
 
 type TUpdatedData = {
   name?: string;
@@ -42,7 +45,7 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 const UpdateProduct = () => {
   const { productId } = useParams<{ productId: string }>();
   const [imageUrl, setImageUrl] = useState("");
-  const [Category, setCategory] = useState("");
+  const [Category, setCategory] = useState<TCategory>({});
   const [disableUploadButton, setDisableUploadButton] = useState(false);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
@@ -56,6 +59,7 @@ const UpdateProduct = () => {
   const cartItems = useAppSelector(getAllCartItems);
   const [updateSingleProduct] = useUpdateSingleProductMutation();
 
+  // initially getting the product's previous values to put them as default values in form fields
   useEffect(() => {
     if (productData?.data) {
       const { name, price, description, image, category, quantity } =
@@ -73,11 +77,12 @@ const UpdateProduct = () => {
     }
   }, [productData, form]);
 
-  const onCategorySelect = (value, label) => {
-    setCategory(value);
+  const onCategorySelect = (value: any, _label: any) => {
+    setCategory({ value: value });
   };
 
-  const onFinish = async (values) => {
+  // handle updating product
+  const onFinish = async (values: any) => {
     let toastId;
     try {
       toastId = toast.loading("Updating product...");
@@ -86,18 +91,22 @@ const UpdateProduct = () => {
         price: Number(values.price),
         description: values.description,
         image: values.image || imageUrl,
-        category: values.category || Category.label,
+        category: values.Category || Category.value,
         quantity: Number(values.quantity),
       };
+
+      console.log({ updatedData });
 
       const res = await updateSingleProduct({
         productId,
         updatedData,
       });
+
+      // update product's quantity in cart if necessary
       const existingCartItem = cartItems.find((item) => item._id === productId);
       if (
         existingCartItem &&
-        existingCartItem.quantity > Number(values.quantity)
+        (existingCartItem.quantity as number) > Number(values.quantity)
       ) {
         dispatch(
           updateCartQuantity({
@@ -119,6 +128,7 @@ const UpdateProduct = () => {
     }
   };
 
+  // handle image upload
   const uploadProps: UploadProps = {
     action: image_hosting_api,
     name: "image",

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Input, Checkbox, Divider } from "antd";
 import { Slider } from "antd";
@@ -38,17 +39,18 @@ const Filter = ({
   setSortByPrice,
   isInitialized,
   setIsInitialized,
-}) => {
+}: any) => {
   const [accordionValue, setAccordionValue] = useState("item-1");
   const [accordion2Value, setAccordion2Value] = useState("item-2");
-  const [disabledButton, setDisabledButton] = useState(false);
+  const [showClearFilterButton, setShowClearFilterButton] = useState(false);
   const [highest, setHighest] = useState(range[1]);
 
   const checkAll = categories.length === checkedList.length;
   const indeterminate =
     checkedList.length > 0 && checkedList.length < categories.length;
 
-  const getMaxPrice = (arr) => {
+  // function for getting the highest valued product from DB
+  const getMaxPrice = (arr: any) => {
     let maxPrice = arr[0].price;
 
     for (let i = 1; i < arr.length; i++) {
@@ -60,6 +62,7 @@ const Filter = ({
     return maxPrice;
   };
 
+  // handle price range state
   useEffect(() => {
     if (allProducts?.data && !isInitialized) {
       const highestPrice = getMaxPrice(allProducts?.data);
@@ -69,25 +72,26 @@ const Filter = ({
     }
   }, [allProducts, isInitialized, range, setRange, setIsInitialized]);
 
-  const onSliderChange = (newRange) => {
+  const onSliderChange = (newRange: any) => {
     setRange(newRange);
   };
 
-  const onLowestChange = (e) => {
+  const onLowestChange = (e: any) => {
     const newLowest = Number(e.target.value);
     if (newLowest <= range[1]) {
       setRange([newLowest, range[1]]);
     }
   };
 
-  const onHighestChange = (e) => {
+  const onHighestChange = (e: any) => {
     const newHighest = Number(e.target.value);
     if (newHighest >= range[0]) {
       setRange([range[0], newHighest]);
     }
   };
 
-  const onCheckAllChange = (e) => {
+  // handle category selection
+  const onCheckAllChange = (e: any) => {
     const allValues = e.target.checked
       ? categories.map((item) => item.value)
       : [];
@@ -95,12 +99,13 @@ const Filter = ({
     setCategory(allValues);
   };
 
-  const onChange = (list) => {
+  const onChange = (list: any) => {
     setCheckedList(list);
     setCategory(list);
   };
 
-  const handleInStockChange = (e) => {
+  // handle product's availability check
+  const handleInStockChange = (e: any) => {
     if (e.target.checked) {
       setInStock(e.target.checked);
     } else {
@@ -108,6 +113,7 @@ const Filter = ({
     }
   };
 
+  // handle showClearFilter button state
   useEffect(() => {
     if (
       checkedList.length > 0 ||
@@ -116,12 +122,13 @@ const Filter = ({
       range[1] !== highest ||
       sortByPrice !== ""
     ) {
-      setDisabledButton(true);
+      setShowClearFilterButton(true);
     } else {
-      setDisabledButton(false);
+      setShowClearFilterButton(false);
     }
   }, [checkedList, inStock, range, highest, sortByPrice]);
 
+  // handle clear filter button
   const handleClearFilter = () => {
     setCheckedList([]);
     setInStock();
@@ -132,7 +139,7 @@ const Filter = ({
   return (
     <div className="bg-gray-200 shadow-xl rounded-md px-8 py-4">
       <div className="justify-end flex ">
-        {disabledButton ? (
+        {showClearFilterButton ? (
           <Button onClick={handleClearFilter} className="bg-red-600">
             Clear Filter
           </Button>

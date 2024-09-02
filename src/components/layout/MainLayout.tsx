@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -25,19 +26,13 @@ const MainLayout = () => {
   const [checkedList, setCheckedList] = useState<string[]>([]);
   const [selectedCartItems, setSelectedCartItems] = useState<DataType[]>([]);
   const [disabledCartButtons, setDisabledCartButtons] = useState([]);
-  const [pendingNavigation, setPendingNavigation] = useState<
-    (() => void) | null
-  >(null);
 
   const cartItems = useAppSelector(getAllCartItems);
 
-  const handleBeforeUnload = (event) => {
+  // handle refresh warning if item exist in cart
+  const handleBeforeUnload = (event: any) => {
     event.preventDefault();
     event.returnValue = "";
-
-    setPendingNavigation(() => () => {
-      window.location.reload();
-    });
   };
 
   useEffect(() => {

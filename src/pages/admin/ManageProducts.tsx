@@ -11,7 +11,7 @@ import {
 } from "@/redux/features/product/productApi";
 import { Flex, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import img from "../../assets/Result/no-data-found.png";
@@ -53,7 +53,7 @@ const ManageProduct = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetallProductsQuery({ limit: 5000 });
+  } = useGetallProductsQuery({ limit: 50000 });
   const cartItems = useAppSelector(getAllCartItems);
 
   if (isLoading) {
@@ -71,7 +71,7 @@ const ManageProduct = () => {
     return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
-  const data: DataType[] = products.data.map((item, index) => ({
+  const data: DataType[] = products.data.map((item: any, index: any) => ({
     key: index,
     _id: item._id,
     image: item.image,
@@ -80,6 +80,7 @@ const ManageProduct = () => {
     price: item.price,
   }));
 
+  // handle products selections
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
 
@@ -94,6 +95,7 @@ const ManageProduct = () => {
   };
 
   // actions
+  // delete single product
   const handleDeleteOne = (key: React.Key) => {
     Swal.fire({
       title: "Are you sure?",
@@ -110,6 +112,7 @@ const ManageProduct = () => {
           (item) => item._id === clickedOne!._id
         );
 
+        // delete the product from cart if it exists there
         if (toBeDeletedCartItem) {
           dispatch(
             deleteCartItems({ selectedCartItems: [toBeDeletedCartItem] })
@@ -120,7 +123,6 @@ const ManageProduct = () => {
         const res = deleteSingleProduct(clickedOne!._id);
 
         res.then((result) => {
-          console.log(result.data);
           if (result.data.success) {
             toast.success("Deleted successfully !", {
               duration: 2000,
@@ -137,6 +139,7 @@ const ManageProduct = () => {
     });
   };
 
+  // delete multiple products
   const handleMultipleDelete = async () => {
     Swal.fire({
       title: "Are you sure?",
@@ -148,6 +151,7 @@ const ManageProduct = () => {
       confirmButtonText: "Yes, delete them!",
     }).then((result) => {
       if (result.isConfirmed) {
+        // delete the selected products from cart if any of them exists there
         const ids: string[] = selectedItems.map((item) => item._id);
         let toBeDeletedCartItems = [];
 
@@ -162,8 +166,6 @@ const ManageProduct = () => {
         const res = deleteMultipleProducts(ids);
 
         res.then((result) => {
-          console.log({ result });
-
           if (result.data.success) {
             toast.success(result.data.message, { duration: 2000 });
             setSelectedItems([]);
@@ -177,12 +179,14 @@ const ManageProduct = () => {
     });
   };
 
+  // handle navigation to Update page
   const handleGoToUpdate = async (key: React.Key) => {
     clickedOne = data.find((item) => item.key === key);
 
     navigate(`/update-product/${clickedOne._id}`);
   };
 
+  // handle navigation to Product Details page
   const handleGoToDetails = async (key: React.Key) => {
     clickedOne = data.find((item) => item.key === key);
 
@@ -202,6 +206,7 @@ const ManageProduct = () => {
       dataIndex: "image",
       render: (image: string, record) => (
         <img
+          className="transition-transform transform hover:scale-105"
           src={image}
           onClick={() => handleGoToDetails(record.key)}
           style={{ width: 70, height: 70 }}

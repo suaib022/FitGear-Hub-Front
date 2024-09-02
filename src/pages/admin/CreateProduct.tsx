@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import UseForm from "@/components/form/Form";
 import FormInput from "@/components/form/Input";
 import { useCreateProductMutation } from "@/redux/features/product/productApi";
@@ -14,9 +16,14 @@ import { useNavigate } from "react-router-dom";
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
+export type TCategory = {
+  value?: string;
+  label?: string;
+};
+
 const CreateProduct = () => {
   const [imageUrl, setImageUrl] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState<TCategory>({});
   const [disableUploadButton, setDisableUploadButton] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [priceError, setPriceError] = useState(false);
@@ -26,16 +33,15 @@ const CreateProduct = () => {
 
   const [createProduct, { isLoading }] = useCreateProductMutation();
 
-  const onCategorySelect = (value, label) => {
-    setCategory(label);
+  const onCategorySelect = (value: any, _label: any) => {
+    setCategory({ value: value });
     setCategoryError(false);
   };
 
   const onSubmit = async (data: FieldValues) => {
     const { price, quantity } = data;
 
-    console.log({ data });
-
+    // validations of inputs before creating products
     if (price <= 0) {
       setPriceError(true);
       return;
@@ -63,10 +69,13 @@ const CreateProduct = () => {
         price: Number(data.price),
         description: data.description,
         image: imageUrl,
-        category: category.value as string,
+        category: category.value,
         quantity: Number(data.quantity),
       };
 
+      console.log({ productData });
+
+      // product creation
       const res = await createProduct(productData).unwrap();
 
       toast.success(res.message, {
@@ -83,6 +92,7 @@ const CreateProduct = () => {
     }
   };
 
+  // handle image upload
   const uploadProps: UploadProps = {
     action: image_hosting_api,
     name: "image",
@@ -102,6 +112,7 @@ const CreateProduct = () => {
       }
     },
     onRemove(file) {
+      console.log({ file });
       setImageUrl("");
       setDisableUploadButton(false);
     },

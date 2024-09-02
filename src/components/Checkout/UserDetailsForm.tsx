@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   addUserDetails,
   getUserDetails,
@@ -12,7 +14,7 @@ import { useEffect, useState } from "react";
 
 const { TextArea } = Input;
 
-const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
+const UserDetailsForm = ({ setUserDetailsMissing }: any) => {
   type FieldType = {
     name?: string;
     contact?: number;
@@ -22,7 +24,7 @@ const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
   };
 
   const [emptyUser, setEmptyUser] = useState(true);
-  const [user, setUser] = useState<TUserDetails>({});
+  const [user, setUser] = useState<TUserDetails>();
 
   const dispatch = useAppDispatch();
   const doesUserExists = useAppSelector(getUserDetails);
@@ -63,7 +65,7 @@ const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
+    _errorInfo
   ) => {
     setUserDetailsMissing(true);
   };
@@ -84,11 +86,11 @@ const UserDetailsForm = ({ userDetailsMissing, setUserDetailsMissing }) => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            name: user.name,
-            contact: user.contact,
-            email: user.email,
-            address: user.shippingAddress,
-            receiveFrom: user.receivedFrom,
+            name: user?.name || "",
+            contact: user?.contact || "",
+            email: user?.email || "",
+            address: user?.shippingAddress || "",
+            receiveFrom: user?.receivedFrom || "",
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}

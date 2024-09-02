@@ -3,7 +3,7 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./testimonials.css";
-import { customerReviews } from "./aboutUsConstants";
+import { customerReviews } from "@/pages/about/aboutUsConstants";
 
 const Testimonials = () => {
   return (
@@ -27,7 +27,7 @@ const Testimonials = () => {
               </div>
               <div className="flex text-center">
                 {Array(review.rating)
-                  .fill()
+                  .fill(undefined)
                   .map((_, i) => (
                     <svg
                       key={i}
@@ -40,7 +40,7 @@ const Testimonials = () => {
                     </svg>
                   ))}
                 {Array(5 - review.rating)
-                  .fill()
+                  .fill(undefined)
                   .map((_, i) => (
                     <svg
                       key={i}

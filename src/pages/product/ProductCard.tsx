@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,13 +21,14 @@ import errorImg from "../../assets/Result/error-404.png";
 const MAX_DESCRIPTION_LENGTH = 75;
 const MAX_NAME_LENGTH = 30;
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product }: any) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
-  const { disabledCartButtons, setDisabledCartButtons } = useOutletContext();
+  const { disabledCartButtons, setDisabledCartButtons } =
+    useOutletContext<any>();
 
   const {
     data: allProducts,
@@ -35,9 +37,9 @@ const ProductCard = ({ product }) => {
   } = useGetallProductsQuery({ limit: 5000 });
   const allCartItems = useAppSelector(getAllCartItems);
 
-  const { _id, name, price, description, image, category, quantity, inStock } =
-    product;
+  const { _id, name, price, description, image, quantity } = product;
 
+  // handle addToCart button status for each product from DB
   useEffect(() => {
     if (
       !isAllProductsLoading &&
@@ -54,7 +56,10 @@ const ProductCard = ({ product }) => {
         );
 
         if (existingCartItem) {
-          if (existingCartItem?.quantity >= existingCartItem?.quantityInStock) {
+          if (
+            (existingCartItem!.quantity as number) >=
+            (existingCartItem!.quantityInStock as number)
+          ) {
             disabledButtons.push({ [product._id]: true });
           } else {
             disabledButtons.push({ [product._id]: false });
@@ -76,6 +81,7 @@ const ProductCard = ({ product }) => {
     setDisabledCartButtons,
   ]);
 
+  // handle truncate name and description
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
@@ -94,6 +100,7 @@ const ProductCard = ({ product }) => {
       ? `${name.substring(0, MAX_NAME_LENGTH)}...`
       : name;
 
+  // handle add to cart
   const handleAddToCart = () => {
     const cartData = {
       _id,
@@ -110,7 +117,9 @@ const ProductCard = ({ product }) => {
     });
   };
 
-  const isDisabled = disabledCartButtons.find((button) => button[_id] === true);
+  const isDisabled = disabledCartButtons.find(
+    (button: any) => button[_id] === true
+  );
 
   if (isAllProductsLoading) {
     return (
@@ -171,7 +180,7 @@ const ProductCard = ({ product }) => {
             <Button
               disabled={!!isDisabled}
               onClick={handleAddToCart}
-              className="text-white hover:bg-rose-600 bg-rose-500  max-w-24 border-rose-700 hover:text-white h-9 w-3/5"
+              className="text-white hover:bg-rose-600 bg-rose-500  max-w-24 hover:text-white h-9 w-3/5"
               variant="outline"
             >
               Add To Cart

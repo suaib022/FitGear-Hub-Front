@@ -1,9 +1,8 @@
-import { getAllCartItems } from "@/redux/features/cart/cartSlice";
-import { useAppSelector } from "@/redux/hooks";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Table } from "antd";
 import type { TableColumnsType } from "antd";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 interface DataType {
   key: React.Key;
@@ -17,9 +16,10 @@ interface DataType {
 }
 
 const OrderSummary = () => {
-  const { selectedCartItems } = useOutletContext();
+  const { selectedCartItems } = useOutletContext<any>();
+  const navigate = useNavigate();
 
-  const data: DataType[] = selectedCartItems.map((item, index) => ({
+  const data: DataType[] = selectedCartItems.map((item: any, index: any) => ({
     key: index,
     _id: item._id,
     image: item.image,
@@ -29,15 +29,22 @@ const OrderSummary = () => {
     total: item.price! * item.quantity!,
   }));
 
+  const handleGoToDetails = async (key: React.Key) => {
+    const clickedOne = data.find((item) => item.key === key);
+
+    navigate(`/products/${clickedOne!._id}`);
+  };
+
   const totalPayable = data.reduce((sum, item) => sum + item.total, 0);
 
   const columns: TableColumnsType<DataType> = [
     {
       title: "Image",
       dataIndex: "image",
-      render: (image: string) => (
+      render: (image: string, record) => (
         <img
-          // src="https://res.cloudinary.com/dh4n0j5yl/image/upload/v1720090890/2034020005-Suaib.png"
+          className=" transition-transform transform hover:scale-105 "
+          onClick={() => handleGoToDetails(record.key)}
           src={image}
           style={{ width: 70, height: 70 }}
         />
@@ -65,8 +72,10 @@ const OrderSummary = () => {
     <div>
       <Table columns={columns} dataSource={data} />
       <div className="flex justify-end  mr-12 font-semibold text-black">
-        Total Payable :{" "}
-        <span className="text-yellow-600"> {totalPayable} $</span>{" "}
+        Total Payableㅤ:ㅤ
+        <span className="text-orange-600 font-semibold">
+          {totalPayable} $
+        </span>{" "}
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "antd";
 import { FaUserEdit } from "react-icons/fa";
 
-const UserDetailsCard = ({ userDetails, setEmptyUser }) => {
+const UserDetailsCard = ({ userDetails, setEmptyUser }: any) => {
   const { name, contact, email, receivedFrom, shippingAddress } = userDetails;
 
   return (

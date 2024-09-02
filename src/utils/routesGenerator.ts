@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TRoute, TUserPath } from "../types/sidebarTypes";
 
 export const routeGenerator = (items: TUserPath[]) => {
@@ -10,7 +11,7 @@ export const routeGenerator = (items: TUserPath[]) => {
     }
 
     if (item.children) {
-      item.children.forEach((child) => {
+      item.children.forEach((child: any) => {
         acc.push({
           path: child.path!,
           element: child.element,

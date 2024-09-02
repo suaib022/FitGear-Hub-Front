@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import cardio from "../../assets/Icons/cardio.png";
 import strength from "../../assets/Icons/strength.png";
 import functional from "../../assets/Icons/functional.png";
@@ -24,9 +25,9 @@ const categories = [
 ];
 
 const Category = () => {
-  const { setCategory, setCheckedList } = useOutletContext();
+  const { setCategory, setCheckedList } = useOutletContext<any>();
   const navigate = useNavigate();
-  const handleCategoryClick = (value) => {
+  const handleCategoryClick = (value: string) => {
     setCategory([value]);
     setCheckedList([value]);
     navigate("/products");

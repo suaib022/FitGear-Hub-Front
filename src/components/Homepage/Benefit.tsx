@@ -15,7 +15,7 @@ const Benefit = () => {
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img1} className="mb-4 mx-auto" />
+            <img src={img1} className="mb-4 mx-auto h-[250px]" />
             <h3 className="text-2xl font-semibold mb-3">Built to Last</h3>
             <p className="text-gray-600 font-semibold italic">
               Our equipment is engineered for durability, ensuring it withstands
@@ -25,7 +25,11 @@ const Benefit = () => {
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img2} alt="Durable Equipment" className="mb-4 mx-auto" />
+            <img
+              src={img2}
+              alt="Durable Equipment"
+              className="mb-4 mx-auto h-[250px]"
+            />
             <h3 className="text-2xl font-semibold mb-3">Customized Workouts</h3>
             <p className="text-gray-600 font-semibold italic">
               Whether you're a beginner or an expert, our range of products
@@ -34,7 +38,11 @@ const Benefit = () => {
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img3} alt="Durable Equipment" className="mb-4 mx-auto" />
+            <img
+              src={img3}
+              alt="Durable Equipment"
+              className="mb-4 mx-auto h-[250px]"
+            />
             <h3 className="text-2xl font-semibold mb-3">
               Enhance Your Performance
             </h3>
@@ -45,7 +53,11 @@ const Benefit = () => {
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img4} alt="Durable Equipment" className="mb-4 mx-auto" />
+            <img
+              src={img4}
+              alt="Durable Equipment"
+              className="mb-4 mx-auto h-[250px]"
+            />
             <h3 className="text-2xl font-semibold mb-3">
               Convenient Home Workouts
             </h3>
@@ -56,7 +68,11 @@ const Benefit = () => {
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img5} alt="Durable Equipment" className="mb-4 mx-auto" />
+            <img
+              src={img5}
+              alt="Durable Equipment"
+              className="mb-4 mx-auto h-[250px]"
+            />
             <h3 className="text-2xl font-semibold mb-3">Injury Prevention</h3>
             <p className="text-gray-600 font-semibold italic">
               Our ergonomically designed equipment minimizes the risk of injury,
@@ -65,7 +81,11 @@ const Benefit = () => {
             </p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-lg">
-            <img src={img6} alt="Durable Equipment" className="mb-4 mx-auto" />
+            <img
+              src={img6}
+              alt="Durable Equipment"
+              className="mb-4 mx-auto h-[250px]"
+            />
             <h3 className="text-2xl font-semibold mb-3">
               Boost Your Confidence
             </h3>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Flex, Spin } from "antd";
@@ -40,7 +41,7 @@ const Featured = () => {
         Featured Equipments
       </h2>
       <div className="grid text-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {products?.data.map((item) => (
+        {products?.data.map((item: any) => (
           <FeaturedCard key={item?._id} item={item} />
         ))}
       </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Card } from "antd";
 import "./FeaturedCard.css";
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const { Meta } = Card;
 
-const FeaturedCard = ({ item }) => {
+const FeaturedCard = ({ item }: any) => {
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
 

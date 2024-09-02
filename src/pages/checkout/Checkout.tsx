@@ -1,16 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Button, Steps, theme } from "antd";
 import Payment from "../../components/Checkout/Payment";
 import OrderSummary from "../../components/Checkout/OrderSummary";
 import UserDetailsForm from "../../components/Checkout/UserDetailsForm";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { useAppDispatch } from "@/redux/hooks";
-import { removeUserDetails } from "@/redux/features/UserDetails/userDetailsSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {
+  getUserDetails,
+  removeUserDetails,
+} from "@/redux/features/UserDetails/userDetailsSlice";
 import { deleteCartItems } from "@/redux/features/cart/cartSlice";
 import {
   useGetallProductsQuery,
   useUpdateSingleProductMutation,
 } from "@/redux/features/product/productApi";
+import Swal from "sweetalert2";
+
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+  quantity: number;
+}
 
 const Checkout = () => {
   const { token } = theme.useToken();
@@ -20,32 +35,35 @@ const Checkout = () => {
   const [userDetailsMissing, setUserDetailsMissing] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [existingProducts, setExistingProducts] = useState([]);
+  const [existingProducts, setExistingProducts] = useState<Product[]>([]);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { selectedCartItems, setSelectedCartItems } = useOutletContext();
+  const { selectedCartItems, setSelectedCartItems } = useOutletContext<any>();
 
   const [updateSingleProduct] = useUpdateSingleProductMutation();
   const { data: allProducts, isLoading } = useGetallProductsQuery({
     limit: 50000,
   });
+  const doesUserExists = useAppSelector(getUserDetails);
 
+  // get the products which are being ordered
   useEffect(() => {
     if (allProducts && selectedCartItems) {
-      const existingItems = selectedCartItems.map((cartItem) =>
-        allProducts.data.find((product) => product._id === cartItem._id)
+      const existingItems = selectedCartItems.map((cartItem: any) =>
+        allProducts.data.find((product: any) => product._id === cartItem._id)
       );
 
-      setExistingProducts(existingItems);
+      setExistingProducts(existingItems as Product[]);
     }
   }, [selectedCartItems, setExistingProducts, allProducts]);
 
+  // decrease products quantity after ordering
   const updateProductQuantities = async () => {
-    const updatedProducts = existingProducts.map((product) => {
+    const updatedProducts = existingProducts.map((product: any) => {
       const cartItem = selectedCartItems.find(
-        (item) => item._id === product._id
+        (item: any) => item._id === product._id
       );
       if (cartItem) {
         return {
@@ -60,7 +78,7 @@ const Checkout = () => {
 
     for (const product of updatedProducts) {
       const cartItem = selectedCartItems.find(
-        (item) => item._id === product._id
+        (item: any) => item._id === product._id
       );
       if (cartItem) {
         const updatedData = {
@@ -75,6 +93,18 @@ const Checkout = () => {
     }
   };
 
+  useEffect(() => {
+    if (doesUserExists?.name) {
+      setUserDetailsMissing(false);
+    } else {
+      setUserDetailsMissing(true);
+    }
+  }, [doesUserExists]);
+
+  // 3 steps of checkout
+  // step - 1 : check the order summary
+  // step - 2 : user details form
+  // step - 3 : payment
   const steps = [
     {
       title: "Summary",
@@ -105,6 +135,7 @@ const Checkout = () => {
     },
   ];
 
+  // handle steps changing
   const next = () => {
     setCurrent(current + 1);
   };
@@ -113,6 +144,7 @@ const Checkout = () => {
     setCurrent(current - 1);
   };
 
+  // handle next button status according to the userDetails
   useEffect(() => {
     if (userDetailsMissing && current === 1) {
       setDisableNextButton(true);
@@ -121,6 +153,7 @@ const Checkout = () => {
     }
   }, [userDetailsMissing, current]);
 
+  // handle proceed button status according to the payment status
   useEffect(() => {
     if (paymentMethod === "cash") {
       setDisableProceedButton(false);
@@ -148,12 +181,20 @@ const Checkout = () => {
     width: "100%",
   };
 
+  // handle proceed
   const onProceed = () => {
     if (paymentMethod === "cash") {
       dispatch(deleteCartItems({ selectedCartItems }));
       setSelectedCartItems([]);
       updateProductQuantities();
     }
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Thanks For Your Order",
+      showConfirmButton: false,
+      timer: 1500,
+    });
     navigate("/");
     dispatch(removeUserDetails());
   };

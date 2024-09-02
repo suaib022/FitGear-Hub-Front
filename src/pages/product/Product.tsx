@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetallProductsQuery } from "@/redux/features/product/productApi";
 import ProductCard from "./ProductCard";
@@ -17,7 +18,7 @@ import errorImg from "../../assets/Result/error-404.png";
 
 const Product = () => {
   const { category, setCategory, checkedList, setCheckedList } =
-    useOutletContext();
+    useOutletContext<any>();
   const [searchTerm, setSearchTerm] = useState("");
   const [range, setRange] = useState([0, 50000]);
   const [inStock, setInStock] = useState();
@@ -35,12 +36,14 @@ const Product = () => {
     { value: 100, label: "100" },
   ]);
 
+  // get all the products in DB
   const {
     data: allProducts,
     isLoading: isAllProductsLoading,
     isError: isAllProductsError,
-  } = useGetallProductsQuery({ limit: 5000 });
+  } = useGetallProductsQuery({ limit: 50000 });
 
+  // get the filtered products
   const {
     data: products,
     isError,
@@ -56,12 +59,13 @@ const Product = () => {
     ...(checkedList.length > 0 && { category: category }),
   });
 
+  // get the filtered products without limit
   const {
     data: productsWithoutLimit,
     isLoading: isProductsWithOutLimitLoading,
     isError: isProductsWithOutLimitError,
   } = useGetallProductsQuery({
-    limit: 5000,
+    limit: 50000,
     searchTerm,
     inStock,
     minPrice: range[0],
@@ -70,12 +74,14 @@ const Product = () => {
     ...(checkedList.length > 0 && { category: category }),
   });
 
+  // handle numberOfProducts state for pagination
   useEffect(() => {
     if (productsWithoutLimit?.data) {
       setNumberOfProducts(productsWithoutLimit.data.length);
     }
   }, [productsWithoutLimit]);
 
+  // handle sorting filter
   useEffect(() => {
     if (sortByPrice === "default") {
       setSortByPrice("");
@@ -88,6 +94,7 @@ const Product = () => {
     setSortByPriceValue(value);
   };
 
+  // handle filter drawer
   const showDrawer = () => {
     setOpen(true);
   };
@@ -96,12 +103,13 @@ const Product = () => {
     setOpen(false);
   };
 
+  // handle page and limit for pagination
   const onChange: PaginationProps["onChange"] = (pageNumber, pageSize) => {
     setPage(pageNumber);
     setLimit(pageSize);
   };
 
-  const onShowSizeChange = (current: number, size: number) => {
+  const onShowSizeChange = (_current: number, size: number) => {
     setLimit(size);
     setPage(1);
   };
@@ -138,11 +146,12 @@ const Product = () => {
     );
   }
 
+  // handle search
   type SearchProps = GetProps<typeof Input.Search>;
 
   const { Search } = Input;
 
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+  const onSearch: SearchProps["onSearch"] = (value, _e, _info) => {
     setSearchTerm(value);
   };
 

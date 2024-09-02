@@ -1,14 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { Form, Radio, Result } from "antd";
-import { useEffect, useState } from "react";
-import {
-  useGetallProductsQuery,
-  useUpdateSingleProductMutation,
-} from "@/redux/features/product/productApi";
-import { useOutletContext } from "react-router-dom";
 
 const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_GATEWAY_PK);
 
@@ -20,67 +15,13 @@ const Payment = ({
   setPaymentMethod,
   updateProductQuantities,
   isLoading,
-}) => {
-  const [showCardForm, setShowCardForm] = useState(false);
-  // const [existingProducts, setExistingProducts] = useState([]);
-
-  // const { selectedCartItems, setSelectedCartItems } = useOutletContext();
-
+}: any) => {
   type FieldType = {
     method?: string;
   };
 
-  // const [updateSingleProduct] = useUpdateSingleProductMutation();
-  // const { data: allProducts, isLoading } = useGetallProductsQuery({
-  //   limit: 50000,
-  // });
-
-  // useEffect(() => {
-  //   if (allProducts && selectedCartItems) {
-  //     const existingItems = selectedCartItems.map((cartItem) =>
-  //       allProducts.data.find((product) => product._id === cartItem._id)
-  //     );
-
-  //     setExistingProducts(existingItems);
-  //   }
-  // }, [selectedCartItems, setExistingProducts, allProducts]);
-
-  // const updateProductQuantities = async () => {
-  //   const updatedProducts = existingProducts.map((product) => {
-  //     const cartItem = selectedCartItems.find(
-  //       (item) => item._id === product._id
-  //     );
-  //     if (cartItem) {
-  //       return {
-  //         ...product,
-  //         quantity: product.quantity - cartItem.quantity,
-  //       };
-  //     }
-  //     return product;
-  //   });
-
-  //   setExistingProducts(updatedProducts);
-
-  //   for (const product of updatedProducts) {
-  //     const cartItem = selectedCartItems.find(
-  //       (item) => item._id === product._id
-  //     );
-  //     if (cartItem) {
-  //       const updatedData = {
-  //         quantity: product.quantity,
-  //       };
-
-  //       await updateSingleProduct({
-  //         productId: product._id,
-  //         updatedData,
-  //       });
-  //     }
-  //   }
-  // };
-
   const handlePaymentMethodChange = (e: any) => {
     setPaymentMethod(e.target.value);
-    setShowCardForm(paymentMethod === "card");
     if (paymentMethod === "cash") {
       setDisableProceedButton(false);
     } else {
