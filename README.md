@@ -82,4 +82,8 @@ To use the FitGear Hub Front, follow these steps:
 
 ---
 
+## Projects Live Link 
+
+**`https://fitgear-hub-front.vercel.app/`**
+
 Feel free to review and let me know if there's anything else you'd like to add or change!
