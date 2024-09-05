@@ -7,7 +7,6 @@ import { Flex, Spin } from "antd";
 import { useEffect, useState } from "react";
 import FilterDrawer from "@/components/Product/FilterDrawer";
 import { Input, Space } from "antd";
-import type { GetProps } from "antd";
 import Filter from "@/components/Product/Filter";
 import { Select } from "antd";
 import type { PaginationProps } from "antd";
@@ -20,6 +19,7 @@ const Product = () => {
   const { category, setCategory, checkedList, setCheckedList } =
     useOutletContext<any>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [range, setRange] = useState([0, 50000]);
   const [inStock, setInStock] = useState();
   const [open, setOpen] = useState(false);
@@ -36,6 +36,17 @@ const Product = () => {
     { value: 100, label: "100" },
   ]);
 
+  // Debouncing the search term to reduce the number of API calls
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 2500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
   // get all the products in DB
   const {
     data: allProducts,
@@ -49,7 +60,7 @@ const Product = () => {
     isError,
     isLoading,
   } = useGetallProductsQuery({
-    searchTerm,
+    searchTerm: debouncedSearchTerm,
     inStock,
     minPrice: range[0],
     maxPrice: range[1],
@@ -66,7 +77,7 @@ const Product = () => {
     isError: isProductsWithOutLimitError,
   } = useGetallProductsQuery({
     limit: 50000,
-    searchTerm,
+    searchTerm: debouncedSearchTerm,
     inStock,
     minPrice: range[0],
     maxPrice: range[1],
@@ -138,7 +149,7 @@ const Product = () => {
     return <img className="h-[450px] mx-auto" src={errorImg} alt="" />;
   }
 
-  if (!products.data) {
+  if (!products?.data) {
     return (
       <div>
         <img src={img} alt="" />
@@ -147,12 +158,11 @@ const Product = () => {
   }
 
   // handle search
-  type SearchProps = GetProps<typeof Input.Search>;
 
   const { Search } = Input;
 
-  const onSearch: SearchProps["onSearch"] = (value, _e, _info) => {
-    setSearchTerm(value);
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -184,7 +194,7 @@ const Product = () => {
                   allowClear
                   enterButton="Search"
                   size="large"
-                  onSearch={onSearch}
+                  onChange={onSearchChange}
                 />
               </Space>
             </div>

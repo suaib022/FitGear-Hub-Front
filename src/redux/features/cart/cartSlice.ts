@@ -5,6 +5,7 @@ export type TCart = {
   _id: string | null;
   name: string | null;
   price: number | null;
+  totalPrice: number | null;
   image: string | null;
   quantity: number | null;
   quantityInStock: number | null;
@@ -19,6 +20,9 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const matchedItem = state.find((item) => item._id === action.payload._id);
       if (matchedItem) {
+        matchedItem.totalPrice =
+          Number(matchedItem.price) *
+          Number(matchedItem.quantity + action.payload.quantity);
         matchedItem.quantity! += action.payload.quantity!;
       } else {
         state.push(action.payload);
@@ -37,7 +41,8 @@ const cartSlice = createSlice({
       });
     },
     updateCartQuantity: (state, action) => {
-      const { _id, updatedQuantity, updatedQuantityInStock } = action.payload;
+      const { _id, updatedQuantity, updatedQuantityInStock, price } =
+        action.payload;
 
       const itemIndex = state.findIndex((item) => item._id === _id);
 
@@ -46,6 +51,7 @@ const cartSlice = createSlice({
           ...state[itemIndex],
           quantity: updatedQuantity,
           quantityInStock: updatedQuantityInStock,
+          totalPrice: updatedQuantity * price,
         };
       }
     },

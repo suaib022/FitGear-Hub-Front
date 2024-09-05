@@ -24,6 +24,7 @@ interface DataType {
   _id?: string | null;
   name: string | null;
   price: number | null;
+  totalPrice: number | null;
   image: string | null;
   quantity: number | null;
   quantityInStock?: number | null;
@@ -51,6 +52,8 @@ const Cart = () => {
     isError: isAllProductsError,
   } = useGetallProductsQuery({ limit: 5000 });
 
+  console.log({ cartItems });
+
   // set the cart items in table data
   const data: DataType[] = cartItems.map((item, index) => ({
     key: index,
@@ -60,6 +63,7 @@ const Cart = () => {
     quantity: item.quantity ?? null,
     quantityInStock: item.quantityInStock ?? null,
     price: item.price ?? null,
+    totalPrice: item.totalPrice ?? null,
   }));
 
   // synchronize selectedRowKeys with selectedCartItems
@@ -198,6 +202,7 @@ const Cart = () => {
           updatedQuantity: newQuantity,
           updatedQuantityInStock: updatedItem.quantityInStock,
           _id: updatedItem._id,
+          price: updatedItem.price,
         })
       );
     }
@@ -277,6 +282,16 @@ const Cart = () => {
     {
       title: "Price",
       dataIndex: "price",
+      render: (price) => (
+        <p className="text-orange-600 font-semibold">{price}</p>
+      ),
+    },
+    {
+      title: "Total",
+      dataIndex: "totalPrice",
+      render: (totalPrice) => (
+        <p className="text-orange-600 font-semibold">{totalPrice}</p>
+      ),
     },
     {
       title: "Action",

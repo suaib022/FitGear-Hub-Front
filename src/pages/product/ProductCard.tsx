@@ -106,6 +106,7 @@ const ProductCard = ({ product }: any) => {
       _id,
       name,
       price,
+      totalPrice: price,
       quantity: 1,
       image: image,
       quantityInStock: quantity,

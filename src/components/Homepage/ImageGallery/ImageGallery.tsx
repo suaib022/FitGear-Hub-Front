@@ -93,7 +93,7 @@ const ImageGallery = () => {
                       <AvatarFallback>VC</AvatarFallback>
                     </Avatar>
                     <div className="space-y-1">
-                      <h4 className="text-sm font-semibold text-rose-500">
+                      <h4 className="text-sm font-semibold text-black">
                         {item.name}
                       </h4>
                       <p className="text-sm italic">{item.description}</p>
@@ -101,7 +101,7 @@ const ImageGallery = () => {
                         <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
                         <span className="text-xs text-muted-foreground">
                           Joined{" "}
-                          <span className=" text-black font-semibold">
+                          <span className=" text-rose-500 font-semibold">
                             {item.customerJoined}
                           </span>
                         </span>

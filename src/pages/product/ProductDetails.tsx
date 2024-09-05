@@ -18,26 +18,32 @@ const ProductDetails = () => {
   const allCartItems = useAppSelector(getAllCartItems);
   const { productId } = useParams<{ productId: string }>();
 
+  if (productId === undefined) {
+    return <div>Error: ID is missing</div>;
+  }
+
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useGetSingleProductQuery(productId);
+
   // handle addToCart button status
   const doesExistInCart = allCartItems.find((item) => item._id === productId);
 
   useEffect(() => {
-    if (
+    if (!product?.data?.inStock) {
+      setDisabledAddToCartButton(true);
+    } else if (
       doesExistInCart &&
-      (doesExistInCart!.quantity as number) >=
-        (doesExistInCart!.quantityInStock as number)
+      Number(doesExistInCart!.quantity) >=
+        Number(doesExistInCart!.quantityInStock)
     ) {
       setDisabledAddToCartButton(true);
     } else {
       setDisabledAddToCartButton(false);
     }
-  }, [doesExistInCart]);
-
-  if (productId === undefined) {
-    return <div>Error: ID is missing</div>;
-  }
-
-  const { data, isLoading, isError } = useGetSingleProductQuery(productId);
+  }, [doesExistInCart, product]);
 
   if (isLoading) {
     return (
@@ -55,13 +61,14 @@ const ProductDetails = () => {
   }
 
   const { _id, name, price, description, category, quantity, inStock, image } =
-    data.data;
+    product.data;
 
   const handleAddToCart = () => {
     const cartData = {
       _id,
       name,
       price,
+      totalPrice: price,
       quantity: 1,
       image: image,
       quantityInStock: quantity,
