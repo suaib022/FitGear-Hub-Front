@@ -84,6 +84,4 @@ To use the FitGear Hub Front, follow these steps:
 
 ## Project's Live Link 
 
-**https://echowash.vercel.app/**
-
-Feel free to review and let me know if there's anything else you'd like to add or change!
+**https://fitgear-hub-front.vercel.app/**
