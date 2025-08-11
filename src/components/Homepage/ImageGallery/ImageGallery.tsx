@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { Parallax } from "react-scroll-parallax";
 import Box from "@mui/material/Box";
 import Masonry from "@mui/lab/Masonry";
 import "./ImageGallery.css";
@@ -61,60 +64,197 @@ import img49 from "../../../assets/Individuals/49.jpg";
 import img50 from "../../../assets/Individuals/50.jpg";
 
 const ImageGallery = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const titleVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.9
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  };
+
+  const imageVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 60,
+      scale: 0.8
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
+  };
+
   return (
-    <div className="">
-      <h2 className="text-4xl text-center my-4 font-bold mb-8 text-gray-800">
-        Meet Our Healthy Individuals
-      </h2>
-      <Box>
-        <Masonry columns={{ xs: 2, sm: 3, md: 4, lg: 5 }} spacing={2}>
-          {itemData.map((item, index) => (
-            <div key={index}>
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <img
-                    srcSet={`${item.img}?w=162&auto=format&dpr=2 2x`}
-                    src={`${item.img}?w=162&auto=format`}
-                    alt={item.title}
-                    loading="lazy"
-                    style={{
-                      borderBottomLeftRadius: 4,
-                      borderBottomRightRadius: 4,
-                      display: "block",
-                      width: "100%",
-                    }}
-                    className="hovered-card"
-                  />
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="flex justify-between space-x-4">
-                    <Avatar>
-                      <AvatarImage src={item.img} />
-                      <AvatarFallback>VC</AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-semibold text-black">
+    <motion.div
+      ref={ref}
+      className="relative py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden"
+      variants={containerVariants}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+    >
+      {/* Background decorative elements */}
+      <div className="absolute inset-0">
+        <motion.div
+          className="absolute top-32 right-20 w-24 h-24 bg-gradient-to-br from-rose-200/30 to-blue-200/30 rounded-full blur-2xl"
+          animate={{
+            scale: [1, 1.4, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-32 left-20 w-32 h-32 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-2xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 180, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      </div>
+
+      <Parallax speed={-3}>
+        <motion.h2
+          className="relative text-5xl text-center my-8 font-bold mb-16 bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 bg-clip-text text-transparent z-10"
+          variants={titleVariants}
+        >
+          Meet Our Healthy Individuals
+        </motion.h2>
+      </Parallax>
+      
+      <motion.div
+        className="relative z-10 px-4"
+        variants={containerVariants}
+      >
+        <Box>
+          <Masonry columns={{ xs: 2, sm: 3, md: 4, lg: 5 }} spacing={3}>
+            {itemData.map((item, index) => (
+              <motion.div
+                key={index}
+                variants={imageVariants}
+                whileHover={{ 
+                  scale: 1.05,
+                  y: -5,
+                  zIndex: 10,
+                }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="relative group"
+              >
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <motion.div
+                      className="relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
+                      whileHover={{
+                        boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)",
+                      }}
+                    >
+                      <motion.img
+                        srcSet={`${item.img}?w=162&auto=format&dpr=2 2x`}
+                        src={`${item.img}?w=162&auto=format`}
+                        alt={item.title}
+                        loading="lazy"
+                        style={{
+                          borderRadius: 16,
+                          display: "block",
+                          width: "100%",
+                        }}
+                        className="transition-all duration-500 group-hover:scale-110"
+                        whileHover={{
+                          filter: "brightness(1.1) contrast(1.05)",
+                        }}
+                      />
+                      
+                      {/* Overlay gradient */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                      />
+                      
+                      {/* Name overlay */}
+                      <motion.div
+                        className="absolute bottom-4 left-4 text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileHover={{ opacity: 1, y: 0 }}
+                      >
                         {item.name}
-                      </h4>
-                      <p className="text-sm italic">{item.description}</p>
-                      <div className="flex items-center pt-2">
-                        <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
-                        <span className="text-xs text-muted-foreground">
-                          Joined{" "}
-                          <span className=" text-rose-500 font-semibold">
-                            {item.customerJoined}
+                      </motion.div>
+                    </motion.div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 bg-white/95 backdrop-blur-sm border-0 shadow-2xl rounded-2xl">
+                    <motion.div
+                      className="flex justify-between space-x-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Avatar className="ring-2 ring-rose-200">
+                        <AvatarImage src={item.img} />
+                        <AvatarFallback>VC</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1 flex-1">
+                        <h4 className="text-sm font-semibold text-black">
+                          {item.name}
+                        </h4>
+                        <p className="text-sm italic text-gray-600">
+                          {item.description}
+                        </p>
+                        <div className="flex items-center pt-2">
+                          <CalendarDays className="mr-2 h-4 w-4 opacity-70 text-rose-500" />
+                          <span className="text-xs text-muted-foreground">
+                            Joined{" "}
+                            <span className="text-rose-500 font-semibold">
+                              {item.customerJoined}
+                            </span>
                           </span>
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
-            </div>
-          ))}
-        </Masonry>
-      </Box>
-    </div>
+                    </motion.div>
+                  </HoverCardContent>
+                </HoverCard>
+              </motion.div>
+            ))}
+          </Masonry>
+        </Box>
+      </motion.div>
+    </motion.div>
   );
 };
 
